@@ -1,16 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="co.edu.uniquindio.citycourier.citycourier.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.HelloViewController">
+    <center>
+        <VBox spacing="8">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10" />
+            </padding>
+            <children>
+                <Label text="Cotizar y Crear Envío (Demo)" />
+                <HBox spacing="8">
+                    <children>
+                        <Label text="Peso (kg)" />
+                        <TextField fx:id="txtPeso" promptText="kg" prefWidth="80" />
+                        <Label text="Volumen (m³)" />
+                        <TextField fx:id="txtVolumen" promptText="m3" prefWidth="80" />
+                        <Label text="Distancia (km)" />
+                        <TextField fx:id="txtDistancia" promptText="km" prefWidth="90" />
+                        <CheckBox fx:id="chkPrioridad" text="Prioridad" />
+                    </children>
+                </HBox>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+                <HBox spacing="8">
+                    <children>
+                        <Label text="Descripción" />
+                        <TextField fx:id="txtDescripcion" promptText="Paquete..." prefWidth="240" />
+                    </children>
+                </HBox>
+
+                <HBox spacing="8">
+                    <children>
+                        <Button text="Cotizar" onAction="#onCotizar" />
+                        <Button text="Crear Envío" onAction="#onCrearEnvio" />
+                        <Button text="Listar Envíos" onAction="#onListar" />
+                        <Label text="ID Envío para cancelar:" />
+                        <TextField fx:id="txtIdCancelar" promptText="id" prefWidth="220" />
+                        <Button text="Cancelar" onAction="#onCancelar" />
+                    </children>
+                </HBox>
+
+                <TextArea fx:id="txtSalida" prefRowCount="12" wrapText="true" />
+            </children>
+        </VBox>
+    </center>
+</BorderPane>

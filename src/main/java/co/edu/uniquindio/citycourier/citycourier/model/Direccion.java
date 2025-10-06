@@ -1,20 +1,21 @@
 package co.edu.uniquindio.citycourier.citycourier.model;
 
-public class direccion {
+public class Direccion {
     private String idDireccion;
     private String barrio;
     private String direccion;
     private String ciudad;
     private String referencia;
 
-    public direccion() {
+    public Direccion() {
 
     }
-    public direccion(String idDireccion, String barrio, String direccion, String ciudad, String referencia) {
+    public Direccion(String idDireccion, String barrio, String direccion, String ciudad, String referencia) {
         this.idDireccion = idDireccion;
         this.barrio = barrio;
         this.direccion = direccion;
         this.ciudad = ciudad;
+        this.referencia = referencia;
     }
 
     public String getIdDireccion() {

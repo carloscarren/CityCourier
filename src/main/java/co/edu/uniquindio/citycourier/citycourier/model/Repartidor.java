@@ -5,7 +5,7 @@ import co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoRepartidor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class repartidor {
+public class Repartidor {
     private String idRepartidor;
     private String nombreCompleto;
     private String documento;
@@ -14,13 +14,13 @@ public class repartidor {
     private String zonaCobertura;
     private List<String> enviosAsignados;
 
-    public repartidor() {
+    public Repartidor() {
         this.estado = estadoRepartidor.INACTIVO;
         this.enviosAsignados = new ArrayList<>();
 
     }
 
-    public repartidor(String idRepartidor, String nombreCompleto, String documento, String telefono, String zonaCobertura, List<String> enviosAsignados) {
+    public Repartidor(String idRepartidor, String nombreCompleto, String documento, String telefono, String zonaCobertura, List<String> enviosAsignados) {
         this.idRepartidor = idRepartidor;
         this.nombreCompleto = nombreCompleto;
         this.documento = documento;
@@ -52,7 +52,7 @@ public class repartidor {
         return idRepartidor;
     }
 
-    public void sutIdRepartidor(String idRepartidor) {
+    public void setIdRepartidor(String idRepartidor) {
         this.idRepartidor = idRepartidor;
     }
 
