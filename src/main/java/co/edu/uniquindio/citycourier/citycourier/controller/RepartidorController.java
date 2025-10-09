@@ -1,28 +1,26 @@
 package co.edu.uniquindio.citycourier.citycourier.controller;
 
-import co.edu.uniquindio.citycourier.citycourier.data.DataStore;
 import co.edu.uniquindio.citycourier.citycourier.domain.Courier;
+import co.edu.uniquindio.citycourier.citycourier.domain.CourierAvailability;
 
-import java.util.Collection;
-import java.util.Random;
+import java.util.*;
 
 public class RepartidorController {
-    public Collection<Courier> listar() {
-        return DataStore.getInstance().getRepartidores().values();
+    private static final Map<String, Courier> repartidores = new HashMap<>();
+
+    static {
+        repartidores.put("R001", new Courier("R001", "Luis Díaz", "1090", "3110000000", "Norte", CourierAvailability.ACTIVO));
+        repartidores.put("R002", new Courier("R002", "María Ruiz", "2080", "3121111111", "Sur", CourierAvailability.INACTIVO));
     }
 
-    public Courier crear(String nombre, String documento, String telefono, String zona) {
+    public static Collection<Courier> listar() { return repartidores.values(); }
+    public static Optional<Courier> obtener(String id) { return Optional.ofNullable(repartidores.get(id)); }
+    public static Courier crear(String nombre, String documento, String telefono, String zona) {
         String id = "R" + (100 + new Random().nextInt(900));
-        Courier c = new Courier(id, nombre, documento, telefono, zona, co.edu.uniquindio.citycourier.citycourier.domain.CourierAvailability.ACTIVO);
-        DataStore.getInstance().getRepartidores().put(id, c);
+        Courier c = new Courier(id, nombre, documento, telefono, zona, CourierAvailability.ACTIVO);
+        repartidores.put(id, c);
         return c;
     }
-
-    public void actualizar(Courier c) {
-        DataStore.getInstance().getRepartidores().put(c.getIdRepartidor(), c);
-    }
-
-    public void eliminar(String id) {
-        DataStore.getInstance().getRepartidores().remove(id);
-    }
+    public static void actualizar(Courier c) { repartidores.put(c.getIdRepartidor(), c); }
+    public static void eliminar(String id) { repartidores.remove(id); }
 }

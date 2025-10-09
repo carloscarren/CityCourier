@@ -2,8 +2,9 @@ package co.edu.uniquindio.citycourier.citycourier.viewcontroller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import co.edu.uniquindio.citycourier.citycourier.data.DataStore;
 import co.edu.uniquindio.citycourier.citycourier.domain.User;
+import co.edu.uniquindio.citycourier.citycourier.controller.AuthController;
+import co.edu.uniquindio.citycourier.citycourier.controller.UsuarioController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -58,10 +59,9 @@ public class HelloController {
 
     @FXML
     private void initialize() {
-        DataStore ds = DataStore.getInstance();
-        String currentUserId = ds.getCurrentUserId();
+        String currentUserId = AuthController.getCurrentUserId();
         if (currentUserId != null) {
-            User u = ds.getUsuarios().get(currentUserId);
+            User u = UsuarioController.obtener(currentUserId).orElse(null);
             if (u != null) {
                 welcomeText.setText("Bienvenido, " + u.getNombreCompleto());
             }

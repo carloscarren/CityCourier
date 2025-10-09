@@ -1,8 +1,10 @@
 package co.edu.uniquindio.citycourier.citycourier.viewcontroller;
 
-import co.edu.uniquindio.citycourier.citycourier.data.DataStore;
 import co.edu.uniquindio.citycourier.citycourier.domain.Address;
 import co.edu.uniquindio.citycourier.citycourier.domain.User;
+import co.edu.uniquindio.citycourier.citycourier.controller.AuthController;
+import co.edu.uniquindio.citycourier.citycourier.controller.DireccionController;
+import co.edu.uniquindio.citycourier.citycourier.controller.UsuarioController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -45,8 +47,8 @@ public class AddressesController {
     }
 
     private void loadData() {
-        DataStore ds = DataStore.getInstance();
-        User user = ds.getUsuarios().get(ds.getCurrentUserId());
+        String uid = AuthController.getCurrentUserId();
+        User user = UsuarioController.obtener(uid).orElse(null);
         if (user == null) {
             data = FXCollections.observableArrayList();
         } else {
@@ -62,10 +64,10 @@ public class AddressesController {
         }
         String id = "A" + (100 + new Random().nextInt(900));
         Address a = new Address(id, aliasField.getText(), calleField.getText(), ciudadField.getText(), 0, 0);
-        DataStore ds = DataStore.getInstance();
-        User user = ds.getUsuarios().get(ds.getCurrentUserId());
+        String uid = AuthController.getCurrentUserId();
+        User user = UsuarioController.obtener(uid).orElse(null);
         if (user != null) {
-            user.getDireccionesFrecuentes().add(a);
+            new DireccionController().crear(uid, a.getAlias(), a.getCalle(), a.getCiudad());
             data.add(a);
             aliasField.clear();
             calleField.clear();
@@ -77,10 +79,10 @@ public class AddressesController {
     private void onDelete() {
         Address selected = table.getSelectionModel().getSelectedItem();
         if (selected == null) return;
-        DataStore ds = DataStore.getInstance();
-        User user = ds.getUsuarios().get(ds.getCurrentUserId());
+        String uid = AuthController.getCurrentUserId();
+        User user = UsuarioController.obtener(uid).orElse(null);
         if (user != null) {
-            user.getDireccionesFrecuentes().removeIf(d -> d.getIdDireccion().equals(selected.getIdDireccion()));
+            new DireccionController().eliminar(uid, selected.getIdDireccion());
             data.remove(selected);
         }
     }

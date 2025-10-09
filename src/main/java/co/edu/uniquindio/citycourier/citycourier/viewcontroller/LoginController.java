@@ -1,7 +1,7 @@
 package co.edu.uniquindio.citycourier.citycourier.viewcontroller;
 
-import co.edu.uniquindio.citycourier.citycourier.data.DataStore;
 import co.edu.uniquindio.citycourier.citycourier.domain.User;
+import co.edu.uniquindio.citycourier.citycourier.controller.AuthController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,16 +32,8 @@ public class LoginController {
             messageLabel.setText("Ingresa el correo");
             return;
         }
-        DataStore ds = DataStore.getInstance();
-        Optional<User> userOpt = ds.getUsuarios().values().stream()
-                .filter(u -> u.getCorreo() != null && u.getCorreo().equalsIgnoreCase(email))
-                .findFirst();
-        if (userOpt.isPresent()) {
-            ds.setCurrentUserId(userOpt.get().getIdUsuario());
-            goToHome();
-        } else {
-            messageLabel.setText("No existe, regístrate");
-        }
+        Optional<User> userOpt = new AuthController().login(email);
+        if (userOpt.isPresent()) goToHome(); else messageLabel.setText("No existe, regístrate");
     }
 
     @FXML
@@ -53,17 +45,12 @@ public class LoginController {
             messageLabel.setText("Correo y nombre son obligatorios");
             return;
         }
-        DataStore ds = DataStore.getInstance();
-        boolean exists = ds.getUsuarios().values().stream()
-                .anyMatch(u -> u.getCorreo() != null && u.getCorreo().equalsIgnoreCase(email));
+        boolean exists = co.edu.uniquindio.citycourier.citycourier.controller.UsuarioController.obtenerPorCorreo(email).isPresent();
         if (exists) {
             messageLabel.setText("Ya existe un usuario con ese correo");
             return;
         }
-        String id = "U" + (100 + new Random().nextInt(900));
-        User u = new User(id, nombre, email, telefono);
-        ds.getUsuarios().put(id, u);
-        ds.setCurrentUserId(id);
+        new AuthController().register(nombre, email, telefono);
         messageLabel.setText("Registro exitoso");
         goToHome();
     }

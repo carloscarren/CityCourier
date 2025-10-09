@@ -1,6 +1,5 @@
 package co.edu.uniquindio.citycourier.citycourier.controller;
 
-import co.edu.uniquindio.citycourier.citycourier.data.DataStore;
 import co.edu.uniquindio.citycourier.citycourier.domain.Shipment;
 
 import java.io.IOException;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class ReporteController {
     public Path exportarEnviosCSV(Path destino) throws IOException {
-        List<String> lines = DataStore.getInstance().getEnvios().values().stream()
+        List<String> lines = EnvioController.listarTodos().stream()
                 .sorted(Comparator.comparing(Shipment::getFechaCreacion))
                 .map(s -> String.join(",",
                         s.getIdEnvio(),

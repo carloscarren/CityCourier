@@ -1,8 +1,9 @@
 package co.edu.uniquindio.citycourier.citycourier.viewcontroller;
 
-import co.edu.uniquindio.citycourier.citycourier.data.DataStore;
 import co.edu.uniquindio.citycourier.citycourier.domain.*;
 import co.edu.uniquindio.citycourier.citycourier.controller.EnvioController;
+import co.edu.uniquindio.citycourier.citycourier.controller.AuthController;
+import co.edu.uniquindio.citycourier.citycourier.controller.UsuarioController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,8 +41,8 @@ public class CotizadorController {
 
     @FXML
     private void initialize() {
-        DataStore ds = DataStore.getInstance();
-        User user = ds.getUsuarios().get(ds.getCurrentUserId());
+        String uid = AuthController.getCurrentUserId();
+        User user = UsuarioController.obtener(uid).orElse(null);
         if (user != null) {
             origenCombo.setItems(FXCollections.observableArrayList(user.getDireccionesFrecuentes()));
             destinoCombo.setItems(FXCollections.observableArrayList(user.getDireccionesFrecuentes()));

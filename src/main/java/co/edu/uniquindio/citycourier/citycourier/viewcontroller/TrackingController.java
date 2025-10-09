@@ -1,8 +1,9 @@
 package co.edu.uniquindio.citycourier.citycourier.viewcontroller;
 
-import co.edu.uniquindio.citycourier.citycourier.data.DataStore;
 import co.edu.uniquindio.citycourier.citycourier.domain.Shipment;
 import co.edu.uniquindio.citycourier.citycourier.domain.ShippingStatus;
+import co.edu.uniquindio.citycourier.citycourier.controller.AuthController;
+import co.edu.uniquindio.citycourier.citycourier.controller.EnvioController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,11 +50,8 @@ public class TrackingController {
     }
 
     private void cargar() {
-        DataStore ds = DataStore.getInstance();
-        List<Shipment> all = ds.getEnvios().values().stream()
-                .filter(s -> ds.getCurrentUserId() != null && ds.getCurrentUserId().equals(s.getIdUsuario()))
-                .collect(Collectors.toList());
-        data = FXCollections.observableArrayList(all);
+        String uid = AuthController.getCurrentUserId();
+        data = FXCollections.observableArrayList(EnvioController.listarPorUsuario(uid));
         table.setItems(data);
     }
 
@@ -63,9 +61,8 @@ public class TrackingController {
         if (selected == null) {
             cargar();
         } else {
-            DataStore ds = DataStore.getInstance();
-            List<Shipment> filtered = ds.getEnvios().values().stream()
-                    .filter(s -> ds.getCurrentUserId() != null && ds.getCurrentUserId().equals(s.getIdUsuario()))
+            String uid = AuthController.getCurrentUserId();
+            List<Shipment> filtered = EnvioController.listarPorUsuario(uid).stream()
                     .filter(s -> s.getEstado() == selected)
                     .collect(Collectors.toList());
             data.setAll(filtered);
