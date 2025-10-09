@@ -5,5 +5,6 @@ public enum ShippingStatus {
     ASIGNADO,
     EN_RUTA,
     ENTREGADO,
-    INCIDENCIA
+    INCIDENCIA,
+    CANCELADO
 }

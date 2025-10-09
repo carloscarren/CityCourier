@@ -2,7 +2,7 @@ package co.edu.uniquindio.citycourier.citycourier.viewcontroller;
 
 import co.edu.uniquindio.citycourier.citycourier.data.DataStore;
 import co.edu.uniquindio.citycourier.citycourier.domain.*;
-import co.edu.uniquindio.citycourier.citycourier.controller.EnvioService;
+import co.edu.uniquindio.citycourier.citycourier.controller.EnvioController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,7 +35,7 @@ public class CotizadorController {
     @FXML
     private Label resultadoLabel;
 
-    private final EnvioService envioService = new EnvioService();
+    private final EnvioController envioService = new EnvioController();
     private double ultimoCosto;
 
     @FXML

@@ -6,7 +6,7 @@ import co.edu.uniquindio.citycourier.citycourier.domain.*;
 import java.util.EnumSet;
 import java.util.Random;
 
-public class EnvioService {
+public class EnvioController {
     public double cotizar(double pesoKg, double volumenM3, Priority prioridad, EnumSet<AdditionalService> servicios) {
         Tariff t = DataStore.getInstance().getTarifaActual();
         double costo = t.getBase() + t.getRecargoPeso() * Math.max(0, pesoKg) + t.getRecargoVolumen() * Math.max(0, volumenM3);
