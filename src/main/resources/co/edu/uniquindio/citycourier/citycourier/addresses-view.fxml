@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="co.edu.uniquindio.citycourier.citycourier.AddressesController">
+    <Label text="Mis direcciones" />
+    <TableView fx:id="table">
+        <columns>
+            <TableColumn text="Alias" fx:id="aliasCol" />
+            <TableColumn text="Calle" fx:id="calleCol" />
+            <TableColumn text="Ciudad" fx:id="ciudadCol" />
+        </columns>
+    </TableView>
+    <HBox spacing="8">
+        <TextField fx:id="aliasField" promptText="Alias" />
+        <TextField fx:id="calleField" promptText="Calle" />
+        <TextField fx:id="ciudadField" promptText="Ciudad" />
+        <Button text="Agregar" onAction="#onAdd" />
+        <Button text="Eliminar" onAction="#onDelete" />
+    </HBox>
+    <Button text="Volver" onAction="#onBack" />
+</VBox>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="co.edu.uniquindio.citycourier.citycourier.LoginController">
+    <padding>
+        <Insets topRightBottomLeft="20" />
+    </padding>
+
+    <Label text="CityCourier - Iniciar sesión / Registro" />
+
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" minWidth="120" />
+            <ColumnConstraints halignment="LEFT" minWidth="200" />
+        </columnConstraints>
+
+        <RowConstraints minHeight="30" />
+        <RowConstraints minHeight="30" />
+        <RowConstraints minHeight="30" />
+
+        <Label text="Correo:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="emailField" promptText="correo@example.com" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+        <Label text="Nombre:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <TextField fx:id="nombreField" promptText="Solo para registro" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+        <Label text="Teléfono:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <TextField fx:id="telefonoField" promptText="Solo para registro" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Iniciar sesión" onAction="#onLogin" />
+        <Button text="Registrarse" onAction="#onRegister" />
+    </HBox>
+
+    <Label fx:id="messageLabel" />
+</VBox>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="co.edu.uniquindio.citycourier.citycourier.TrackingController">
+    <Label text="Mis envíos" />
+    <HBox spacing="8">
+        <Label text="Estado:" />
+        <ChoiceBox fx:id="estadoChoice" />
+        <Button text="Filtrar" onAction="#onFiltrar" />
+        <Button text="Volver" onAction="#onBack" />
+    </HBox>
+    <TableView fx:id="table">
+        <columns>
+            <TableColumn text="ID" fx:id="idCol" />
+            <TableColumn text="Origen" fx:id="origenCol" />
+            <TableColumn text="Destino" fx:id="destinoCol" />
+            <TableColumn text="Estado" fx:id="estadoCol" />
+            <TableColumn text="Costo" fx:id="costoCol" />
+        </columns>
+    </TableView>
+</VBox>

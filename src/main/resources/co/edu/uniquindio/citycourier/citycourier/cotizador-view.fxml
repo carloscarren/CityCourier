@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="co.edu.uniquindio.citycourier.citycourier.CotizadorController">
+    <Label text="Cotizar envío" />
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Origen:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <ComboBox fx:id="origenCombo" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+        <Label text="Destino:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <ComboBox fx:id="destinoCombo" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+        <Label text="Peso (kg):" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <TextField fx:id="pesoField" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+        <Label text="Volumen (m3):" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+        <TextField fx:id="volumenField" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+        <Label text="Prioridad:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+        <ChoiceBox fx:id="prioridadChoice" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+    </GridPane>
+
+    <HBox spacing="10">
+        <CheckBox fx:id="seguroCheck" text="Seguro" />
+        <CheckBox fx:id="fragilCheck" text="Frágil" />
+        <CheckBox fx:id="firmaCheck" text="Firma requerida" />
+    </HBox>
+
+    <HBox spacing="10">
+        <Button text="Calcular" onAction="#onCalcular" />
+        <Button text="Crear envío" onAction="#onCrearEnvio" />
+        <Button text="Volver" onAction="#onBack" />
+    </HBox>
+
+    <Label fx:id="resultadoLabel" />
+</VBox>
