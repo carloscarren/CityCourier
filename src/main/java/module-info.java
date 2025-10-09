@@ -4,6 +4,12 @@ module co.edu.uniquindio.citycourier.citycourier {
 
     requires org.controlsfx.controls;
 
-    opens co.edu.uniquindio.citycourier.citycourier to javafx.fxml;
+    // UI controllers for FXML
+    opens co.edu.uniquindio.citycourier.citycourier.viewcontroller to javafx.fxml;
+
+    // App entry
     exports co.edu.uniquindio.citycourier.citycourier;
+
+    // Expose business layer if needed from other modules (optional here)
+    exports co.edu.uniquindio.citycourier.citycourier.controller;
 }

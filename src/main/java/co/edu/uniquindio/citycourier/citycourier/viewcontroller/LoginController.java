@@ -1,4 +1,4 @@
-package co.edu.uniquindio.citycourier.citycourier;
+package co.edu.uniquindio.citycourier.citycourier.viewcontroller;
 
 import co.edu.uniquindio.citycourier.citycourier.data.DataStore;
 import co.edu.uniquindio.citycourier.citycourier.domain.User;
@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import co.edu.uniquindio.citycourier.citycourier.HelloApplication;
 
 import java.io.IOException;
 import java.util.Optional;

@@ -1,14 +1,15 @@
-package co.edu.uniquindio.citycourier.citycourier;
+package co.edu.uniquindio.citycourier.citycourier.viewcontroller;
 
 import co.edu.uniquindio.citycourier.citycourier.data.DataStore;
 import co.edu.uniquindio.citycourier.citycourier.domain.*;
-import co.edu.uniquindio.citycourier.citycourier.service.QuoteService;
+import co.edu.uniquindio.citycourier.citycourier.controller.EnvioService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import co.edu.uniquindio.citycourier.citycourier.HelloApplication;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -34,6 +35,7 @@ public class CotizadorController {
     @FXML
     private Label resultadoLabel;
 
+    private final EnvioService envioService = new EnvioService();
     private double ultimoCosto;
 
     @FXML
@@ -65,7 +67,7 @@ public class CotizadorController {
                 resultadoLabel.setText("Selecciona origen y destino");
                 return;
             }
-            double costo = QuoteService.calcularCosto(DataStore.getInstance().getTarifaActual(), peso, volumen, prioridad, servicios);
+            double costo = envioService.cotizar(peso, volumen, prioridad, servicios);
             ultimoCosto = costo;
             resultadoLabel.setText("Costo estimado: $" + (long) costo);
         } catch (NumberFormatException e) {
@@ -90,15 +92,8 @@ public class CotizadorController {
             if (fragilCheck.isSelected()) servicios.add(AdditionalService.FRAGIL);
             if (firmaCheck.isSelected()) servicios.add(AdditionalService.FIRMA_REQUERIDA);
 
-            DataStore ds = DataStore.getInstance();
-            String id = "E" + (100 + new Random().nextInt(900));
-            Shipment s = new Shipment(id, origen, destino, peso, volumen, prioridad);
-            s.setIdUsuario(ds.getCurrentUserId());
-            s.setServicios(servicios);
-            double costo = ultimoCosto > 0 ? ultimoCosto : QuoteService.calcularCosto(ds.getTarifaActual(), peso, volumen, prioridad, servicios);
-            s.setCosto(costo);
-            ds.getEnvios().put(id, s);
-            resultadoLabel.setText("Envío creado: " + id + " por $" + (long) costo);
+            Shipment s = envioService.crearEnvio(origen, destino, peso, volumen, prioridad, servicios);
+            resultadoLabel.setText("Envío creado: " + s.getIdEnvio() + " por $" + (long) s.getCosto());
         } catch (NumberFormatException e) {
             resultadoLabel.setText("Peso/volumen inválidos");
         }

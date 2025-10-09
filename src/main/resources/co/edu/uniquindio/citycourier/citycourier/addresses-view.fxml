@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="co.edu.uniquindio.citycourier.citycourier.AddressesController">
+      fx:controller="co.edu.uniquindio.citycourier.citycourier.viewcontroller.AddressesController">
     <Label text="Mis direcciones" />
     <TableView fx:id="table">
         <columns>

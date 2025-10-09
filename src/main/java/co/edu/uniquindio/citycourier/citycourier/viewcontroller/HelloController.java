@@ -1,4 +1,4 @@
-package co.edu.uniquindio.citycourier.citycourier;
+package co.edu.uniquindio.citycourier.citycourier.viewcontroller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
+import co.edu.uniquindio.citycourier.citycourier.HelloApplication;
 
 public class HelloController {
     @FXML

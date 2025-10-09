@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="co.edu.uniquindio.citycourier.citycourier.TrackingController">
+      fx:controller="co.edu.uniquindio.citycourier.citycourier.viewcontroller.TrackingController">
     <Label text="Mis envíos" />
     <HBox spacing="8">
         <Label text="Estado:" />

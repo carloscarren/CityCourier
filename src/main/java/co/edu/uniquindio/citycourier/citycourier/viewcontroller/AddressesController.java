@@ -1,4 +1,4 @@
-package co.edu.uniquindio.citycourier.citycourier;
+package co.edu.uniquindio.citycourier.citycourier.viewcontroller;
 
 import co.edu.uniquindio.citycourier.citycourier.data.DataStore;
 import co.edu.uniquindio.citycourier.citycourier.domain.Address;
@@ -12,6 +12,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import co.edu.uniquindio.citycourier.citycourier.HelloApplication;
 
 import java.io.IOException;
 import java.util.Random;
