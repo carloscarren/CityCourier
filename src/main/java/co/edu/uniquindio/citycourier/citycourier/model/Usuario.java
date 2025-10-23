@@ -1,31 +1,36 @@
 package co.edu.uniquindio.citycourier.citycourier.model;
 
+import co.edu.uniquindio.citycourier.citycourier.model.ENUMS.tipoUsuario;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Usuario {
+
     private String idUsuario;
-    private String nombreCompleto;
-    private String correoElectronico;
-    private String numeroTelefono;
+    private String nombre;
+    private String correo;
+    private String telefono;
     private String contrasena;
-    private List<Direccion> direccionesFrecuentes;
+    private tipoUsuario tipo; // Nuevo campo
+    private List<Direccion> direccionesFrecuentes = new ArrayList<>();
     private List<String> metodosPago;
 
     public Usuario() {
         this.direccionesFrecuentes = new ArrayList<>();
         this.metodosPago = new ArrayList<>();
+        inicializarMetodosPago();
     }
 
-    public Usuario(String idUsuario, String nombreCompleto, String correoElectronico, String numeroTelefono, String contrasena) {
+    public Usuario(String idUsuario, String nombre, String correo, String telefono, String contrasena, tipoUsuario tipo) {
         this.idUsuario = idUsuario;
-        this.nombreCompleto = nombreCompleto;
-        this.correoElectronico = correoElectronico;
-        this.numeroTelefono = numeroTelefono;
+        this.nombre = nombre;
+        this.correo = correo;
+        this.telefono = telefono;
         this.contrasena = contrasena;
+        this.tipo = tipo;
         this.direccionesFrecuentes = new ArrayList<>();
         this.metodosPago = new ArrayList<>();
-
         inicializarMetodosPago();
     }
 
@@ -34,6 +39,7 @@ public class Usuario {
         metodosPago.add("Tarjeta de credito");
         metodosPago.add("PSE");
     }
+
 
     public void agregarDireccionFrecuente(Direccion direccionFrecuente) {
         if (!direccionesFrecuentes.contains(direccionFrecuente)) {
@@ -46,13 +52,14 @@ public class Usuario {
     }
 
     public Direccion buscarDireccionPorId(String idDireccion) {
-        for (Direccion direccionFrecuente : direccionesFrecuentes) {
-            if (direccionFrecuente.getIdDireccion().equals(idDireccion)) {
-                return direccionFrecuente;
+        for (Direccion direccion : direccionesFrecuentes) {
+            if (direccion.getIdDireccion().equals(idDireccion)) {
+                return direccion;
             }
         }
         return null;
     }
+
 
     public void agregarMetodoPago(String metodoPago) {
         if (!metodosPago.contains(metodoPago)) {
@@ -64,6 +71,7 @@ public class Usuario {
         metodosPago.remove(metodoPago);
     }
 
+
     public String getIdUsuario() {
         return idUsuario;
     }
@@ -72,28 +80,28 @@ public class Usuario {
         this.idUsuario = idUsuario;
     }
 
-    public String getNombreCompleto() {
-        return nombreCompleto;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getCorreoElectronico() {
-        return correoElectronico;
+    public String getCorreo() {
+        return correo;
     }
 
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
-    public String getNumeroTelefono() {
-        return numeroTelefono;
+    public String getTelefono() {
+        return telefono;
     }
 
-    public void setNumeroTelefono(String numeroTelefono) {
-        this.numeroTelefono = numeroTelefono;
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public String getContrasena() {
@@ -104,12 +112,20 @@ public class Usuario {
         this.contrasena = contrasena;
     }
 
+    public tipoUsuario getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(tipoUsuario tipo) {
+        this.tipo = tipo;
+    }
+
     public List<Direccion> getDireccionesFrecuentes() {
         return direccionesFrecuentes;
     }
 
-    public void setDireccionesFrecuentes(List<Direccion> direccionFrecuentes) {
-        this.direccionesFrecuentes = direccionFrecuentes;
+    public void setDireccionesFrecuentes(List<Direccion> direccionesFrecuentes) {
+        this.direccionesFrecuentes = direccionesFrecuentes;
     }
 
     public List<String> getMetodosPago() {
@@ -120,13 +136,21 @@ public class Usuario {
         this.metodosPago = metodosPago;
     }
 
+
+    public void agregarDireccion(Direccion direccion) {
+        if (direccion != null) {
+            direccionesFrecuentes.add(direccion);
+        }
+
+    }
     @Override
     public String toString() {
-        return "usuario{" +
+        return "Usuario{" +
                 "idUsuario='" + idUsuario + '\'' +
-                ", nombreCompleto='" + nombreCompleto + '\'' +
-                ", correoElectronico='" + correoElectronico + '\'' +
-                ", numeroTelefono='" + numeroTelefono + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", correo='" + correo + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", tipo=" + tipo +
                 '}';
     }
 }

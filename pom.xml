@@ -53,6 +53,8 @@
                 <configuration>
                     <source>23</source>
                     <target>23</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -65,7 +67,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                co.edu.uniquindio.citycourier.citycourier/co.edu.uniquindio.citycourier.citycourier.HelloApplication
+                                co.edu.uniquindio.citycourier.citycourier/co.edu.uniquindio.citycourier.citycourier.CourierApp
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

@@ -24,5 +24,7 @@ module co.edu.uniquindio.citycourier.citycourier {
 
     opens co.edu.uniquindio.citycourier.citycourier.viewController to javafx.fxml;
     exports co.edu.uniquindio.citycourier.citycourier.viewController;
+    exports co.edu.uniquindio.citycourier.citycourier.factory;
+    opens co.edu.uniquindio.citycourier.citycourier.factory;
 
 }
