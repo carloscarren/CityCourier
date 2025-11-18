@@ -11,9 +11,10 @@ public class CourierApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(CourierApp.class.getResource("Login.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load(), 854, 503);
         stage.setTitle("Bienvenido a CityCourier");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 

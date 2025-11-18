@@ -3,7 +3,11 @@ package co.edu.uniquindio.citycourier.citycourier.factory;
 import co.edu.uniquindio.citycourier.citycourier.mapping.dto.EnvioDto;
 import co.edu.uniquindio.citycourier.citycourier.mapping.dto.RepartidorDto;
 import co.edu.uniquindio.citycourier.citycourier.mapping.dto.UsuarioDto;
+import co.edu.uniquindio.citycourier.citycourier.mapping.mappers.EnvioMapper;
+import co.edu.uniquindio.citycourier.citycourier.mapping.mappers.RepartidorMapper;
+import co.edu.uniquindio.citycourier.citycourier.mapping.mappers.UsuarioMapper;
 import co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoEnvio;
+import co.edu.uniquindio.citycourier.citycourier.utils.DataUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +21,23 @@ public class ModelCityCourier {
     private final List<RepartidorDto> repartidores = new ArrayList<>();
     private final List<UsuarioDto> usuarios = new ArrayList<>();
 
-    private ModelCityCourier() {}
+    private ModelCityCourier() {
+        inicializarDatos();
+    }
+
+    private void inicializarDatos() {
+        // Inicializar usuarios desde DataUtil y convertir a DTOs
+        var usuariosModelo = DataUtil.crearUsuarios();
+        usuarios.addAll(UsuarioMapper.getUsuariosDto(usuariosModelo));
+
+        // Inicializar repartidores desde DataUtil y convertir a DTOs
+        var repartidoresModelo = DataUtil.crearRepartidores();
+        repartidores.addAll(RepartidorMapper.getRepartidoresDto(repartidoresModelo));
+
+        // Inicializar envíos desde DataUtil y convertir a DTOs
+        var enviosModelo = DataUtil.crearEnvios(usuariosModelo);
+        envios.addAll(EnvioMapper.getEnviosDto(enviosModelo));
+    }
 
     public static synchronized ModelCityCourier getInstance() {
         if (instance == null) {
@@ -162,5 +182,29 @@ public class ModelCityCourier {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Busca un usuario por correo y valida su contraseña.
+     * @param correo Correo del usuario
+     * @param contrasena Contraseña a validar
+     * @return UsuarioDto si las credenciales son válidas, null en caso contrario
+     */
+    public UsuarioDto autenticarUsuario(String correo, String contrasena) {
+        if (correo == null || contrasena == null) {
+            return null;
+        }
+        
+        for (UsuarioDto usuario : usuarios) {
+            if (usuario.correo().equalsIgnoreCase(correo)) {
+                // Convertir a modelo para acceder a la contraseña
+                var usuarioModelo = UsuarioMapper.usuarioDtoToUsuario(usuario);
+                if (usuarioModelo != null && usuarioModelo.getContrasena() != null 
+                    && usuarioModelo.getContrasena().equals(contrasena)) {
+                    return usuario;
+                }
+            }
+        }
+        return null;
     }
 }

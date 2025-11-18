@@ -62,14 +62,25 @@ public class UsuarioController {
 
     /**
      * Calcula una cotización estimada según peso, volumen y distancia.
+     * Utiliza el modelo Tarifa para calcular el costo real.
      */
     public double cotizar(double peso, double volumen, double distancia, boolean prioridad) {
-        double costoBase = 5000;
-        double costoPeso = peso * 1000;
-        double costoVolumen = volumen * 800;
-        double costoDistancia = distancia * 500;
-        double costoPrioridad = prioridad ? 2000 : 0;
+        // Crear una tarifa estándar para el cálculo
+        co.edu.uniquindio.citycourier.citycourier.model.Tarifa tarifa = 
+            new co.edu.uniquindio.citycourier.citycourier.model.Tarifa(
+                "TARIFA_STD",
+                5000,  // costoBase
+                1000,  // costoPorPeso
+                800,   // costoPorVolumen
+                500,   // costoPorDistancia
+                2000,  // recargoPrioridad
+                0,     // recargoSeguro
+                0,     // recargoFragil
+                0,     // recargoFirma
+                "GENERAL" // zona
+            );
 
-        return costoBase + costoPeso + costoVolumen + costoDistancia + costoPrioridad;
+        // Usar el método calcularCosto del modelo Tarifa
+        return tarifa.calcularCosto(peso, volumen, distancia, prioridad, false, false, false);
     }
 }

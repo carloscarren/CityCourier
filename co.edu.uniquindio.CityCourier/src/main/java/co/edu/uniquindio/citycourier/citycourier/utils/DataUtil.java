@@ -26,6 +26,10 @@ public class DataUtil {
         Usuario usuario2 = new Usuario("U002", "Ana", "Gómez", "ana@mail.com",
                 "3123456789", "1234", tipoUsuario.CLIENTE);
 
+        // Usuario administrador para pruebas
+        Usuario admin = new Usuario("ADM001", "Admin", "Sistema", "admin@citycourier.com",
+                "3001234567", "admin123", tipoUsuario.ADMINISTRADOR);
+
         // Agregar direcciones frecuentes
         usuario1.agregarDireccionFrecuente(
                 new Direccion("D001", "Calle 1 # 2-3", "Quindío", "Centro - Frente al parque")
@@ -36,6 +40,7 @@ public class DataUtil {
 
         usuarios.add(usuario1);
         usuarios.add(usuario2);
+        usuarios.add(admin);
 
         return usuarios;
     }
