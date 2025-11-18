@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="750.0" prefWidth="900.0"
+            xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.administrador.ViewControllerAdmnistrador">
+
+    <top>
+        <HBox spacing="20" alignment="CENTER_RIGHT" style="-fx-padding: 10;">
+            <children>
+                <Label fx:id="lblBienvenidaAdmin" text="Panel de Administración - CityCourier" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnCerrarSesion" text="Cerrar Sesión" onAction="#onCerrarSesion"/>
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <TabPane fx:id="tabPaneAdmin" prefHeight="640.0" prefWidth="850.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Usuarios">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <fx:include source="AdminUsuarios.fxml"/>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Repartidores">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <fx:include source="AdminRepartidores.fxml"/>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Envíos">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <fx:include source="AdminEnvios.fxml"/>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Métricas">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <fx:include source="AdminMetricas.fxml"/>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+</BorderPane>

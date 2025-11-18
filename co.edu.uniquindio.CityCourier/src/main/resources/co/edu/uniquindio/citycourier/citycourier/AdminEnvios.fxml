@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.admin.AdminEnviosController">
+
+    <children>
+        <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10">
+            <Label text="Gestión de Envíos"
+                   style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+            <HBox spacing="10">
+                <TextField fx:id="txtIdEnvio" promptText="ID Envío"/>
+                <TextField fx:id="txtEstado" promptText="Nuevo Estado"/>
+                <TextField fx:id="txtIdRepartidor" promptText="ID Repartidor (para asignar)"/>
+                <Button text="Actualizar Estado" onAction="#onActualizarEstado"/>
+                <Button text="Asignar Repartidor" onAction="#onAsignarRepartidor"/>
+                <Button text="Cancelar Envío" onAction="#onCancelarEnvio"/>
+            </HBox>
+
+            <TableView fx:id="tablaEnvios" prefHeight="450" prefWidth="750">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="100"/>
+                    <TableColumn fx:id="colUsuario" text="Usuario" prefWidth="100"/>
+                    <TableColumn fx:id="colOrigen" text="Origen" prefWidth="120"/>
+                    <TableColumn fx:id="colDestino" text="Destino" prefWidth="120"/>
+                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+                    <TableColumn fx:id="colCosto" text="Costo" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </children>
+</AnchorPane>
