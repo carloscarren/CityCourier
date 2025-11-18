@@ -3,9 +3,16 @@ package co.edu.uniquindio.citycourier.citycourier.viewController.usuario;
 import co.edu.uniquindio.citycourier.citycourier.mapping.dto.EnvioDto;
 import co.edu.uniquindio.citycourier.citycourier.model.Direccion;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class UsuarioViewController {
 
@@ -19,6 +26,8 @@ public class UsuarioViewController {
     @FXML private TextField txtDescripcion;
     @FXML private TextField txtIdCancelar;
     @FXML private TextArea txtSalida;
+    @FXML
+    private javafx.scene.control.Button btnCerrarSesion;
 
     @FXML
     protected void onCotizar() {
@@ -55,15 +64,24 @@ public class UsuarioViewController {
 
     @FXML
     protected void onListar() {
+        if (txtSalida != null) {
+            txtSalida.clear();
+        }
         var lista = usuarioController.listarEnvios();
         if (lista.isEmpty()) {
-            println("No hay envíos.");
+            println("No hay envíos registrados.");
             return;
         }
-        println("Envíos:");
+        println("📦 Lista de Envíos:");
+        println("===================");
         for (EnvioDto e : lista) {
-            println("- id=" + e.idEnvio() + " estado=" + e.estado() + " costo=$" + (long) e.costo());
+            println("ID: " + e.idEnvio() + 
+                   " | Estado: " + e.estado() + 
+                   " | Costo: $" + (long) e.costo() +
+                   " | Usuario: " + e.idUsuario());
         }
+        println("===================");
+        println("Total: " + lista.size() + " envío(s)");
     }
 
     @FXML
@@ -79,5 +97,57 @@ public class UsuarioViewController {
 
     private void println(String s) {
         txtSalida.appendText(s + "\n");
+    }
+
+    @FXML
+    protected void onCerrarSesion() {
+        try {
+            // Obtener el Stage desde cualquier componente FXML disponible
+            Stage stage = null;
+            if (btnCerrarSesion != null && btnCerrarSesion.getScene() != null) {
+                stage = (Stage) btnCerrarSesion.getScene().getWindow();
+            } else if (txtSalida != null && txtSalida.getScene() != null) {
+                stage = (Stage) txtSalida.getScene().getWindow();
+            } else {
+                javafx.scene.Node node = btnCerrarSesion != null ? btnCerrarSesion : txtSalida;
+                if (node != null && node.getScene() != null) {
+                    stage = (Stage) node.getScene().getWindow();
+                }
+            }
+            
+            if (stage == null) {
+                mostrarAlerta("Error", "No se pudo obtener la ventana actual.");
+                return;
+            }
+            
+            // Cargar la vista de login
+            java.net.URL url = getClass().getResource(
+                    "/co/edu/uniquindio/citycourier/citycourier/Login.fxml");
+            if (url == null) {
+                mostrarAlerta("Error", "No se encontró el archivo Login.fxml");
+                return;
+            }
+            
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Login - CityCourier");
+            stage.centerOnScreen();
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo cargar la vista de login: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error inesperado: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

@@ -1,14 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefHeight="600.0" prefWidth="800.0">
+    <children>
+        <VBox spacing="15" style="-fx-padding: 20;" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+            <children>
+                <Label text="Mi Perfil" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                <Separator/>
+                
+                <HBox spacing="20">
+                    <children>
+                        <VBox spacing="10" prefWidth="300">
+                            <Label text="Información Personal" style="-fx-font-weight: bold;"/>
+                            <Label text="Nombre: [Nombre del Usuario]"/>
+                            <Label text="Correo: [correo@mail.com]"/>
+                            <Label text="Teléfono: [3001234567]"/>
+                            <Label text="ID Usuario: [U001]"/>
+                        </VBox>
+                        <VBox spacing="10" prefWidth="300">
+                            <Label text="Direcciones Frecuentes" style="-fx-font-weight: bold;"/>
+                            <Label text="Dirección 1: Calle 1 # 2-3, Centro"/>
+                            <Label text="Dirección 2: Calle 5 # 10-20, Norte"/>
+                        </VBox>
+                    </children>
+                </HBox>
+                
+                <Separator/>
+                
+                <Label text="Estadísticas" style="-fx-font-weight: bold;"/>
+                <HBox spacing="30">
+                    <VBox spacing="5">
+                        <Label text="Total de Envíos:"/>
+                        <Label text="0" style="-fx-font-size: 24; -fx-text-fill: #2196F3;"/>
+                    </VBox>
+                    <VBox spacing="5">
+                        <Label text="Envíos Pendientes:"/>
+                        <Label text="0" style="-fx-font-size: 24; -fx-text-fill: #FF9800;"/>
+                    </VBox>
+                    <VBox spacing="5">
+                        <Label text="Envíos Completados:"/>
+                        <Label text="0" style="-fx-font-size: 24; -fx-text-fill: #4CAF50;"/>
+                    </VBox>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>

@@ -1,14 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.usuario.UsuarioViewController"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane prefHeight="750.0" prefWidth="900.0"
+            xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.usuario.UsuarioViewController">
 
-</AnchorPane>
+    <top>
+        <HBox spacing="20" alignment="CENTER_RIGHT" style="-fx-padding: 10;">
+            <children>
+                <Label fx:id="lblBienvenida" text="Bienvenido - CityCourier" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnCerrarSesion" text="Cerrar Sesión" onAction="#onCerrarSesion"/>
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" prefHeight="640.0" prefWidth="850.0">
+            <tabs>
+                <Tab text="Crear Envío">
+                    <content>
+                        <VBox spacing="15" style="-fx-padding: 20;">
+                            <children>
+                                <Label text="Nuevo Envío" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                                
+                                <HBox spacing="10">
+                                    <children>
+                                        <VBox spacing="5">
+                                            <Label text="Peso (kg):"/>
+                                            <TextField fx:id="txtPeso" promptText="Ej: 2.5" prefWidth="150"/>
+                                        </VBox>
+                                        <VBox spacing="5">
+                                            <Label text="Volumen (m³):"/>
+                                            <TextField fx:id="txtVolumen" promptText="Ej: 0.3" prefWidth="150"/>
+                                        </VBox>
+                                        <VBox spacing="5">
+                                            <Label text="Distancia (km):"/>
+                                            <TextField fx:id="txtDistancia" promptText="Ej: 5.0" prefWidth="150"/>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                                
+                                <HBox spacing="10">
+                                    <children>
+                                        <VBox spacing="5">
+                                            <Label text="Descripción:"/>
+                                            <TextField fx:id="txtDescripcion" promptText="Descripción del paquete" prefWidth="400"/>
+                                        </VBox>
+                                        <VBox spacing="5" alignment="CENTER_LEFT">
+                                            <Label text="Opciones:"/>
+                                            <CheckBox fx:id="chkPrioridad" text="Envío Prioritario"/>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                                
+                                <HBox spacing="10">
+                                    <Button text="Cotizar" onAction="#onCotizar" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                                    <Button text="Crear Envío" onAction="#onCrearEnvio" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                                </HBox>
+                                
+                                <Separator/>
+                                
+                                <Label text="Cancelar Envío:" style="-fx-font-weight: bold;"/>
+                                <HBox spacing="10">
+                                    <TextField fx:id="txtIdCancelar" promptText="ID del envío a cancelar" prefWidth="200"/>
+                                    <Button text="Cancelar Envío" onAction="#onCancelar" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+                
+                <Tab text="Mis Envíos">
+                    <content>
+                        <VBox spacing="15" style="-fx-padding: 20;">
+                            <children>
+                                <Label text="Lista de Envíos" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                                <Button text="Actualizar Lista" onAction="#onListar" style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+                                <Separator/>
+                                <TextArea fx:id="txtSalida" prefHeight="500" prefWidth="800" editable="false" wrapText="true"/>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+                
+                <Tab text="Perfil">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <fx:include source="PerfilUsuario.fxml"/>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+</BorderPane>

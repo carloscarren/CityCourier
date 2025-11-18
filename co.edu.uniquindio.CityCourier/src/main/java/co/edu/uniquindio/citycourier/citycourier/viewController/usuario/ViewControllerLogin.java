@@ -38,27 +38,51 @@ public class ViewControllerLogin {
         UsuarioDto usuarioEncontrado = model.autenticarUsuario(correo, contrasena);
 
         if (usuarioEncontrado == null) {
-            mostrarAlerta("Error", "Correo o contraseña incorrectos");
+            mostrarAlerta("Error", "Correo o contraseña incorrectos. Verifique sus credenciales.");
+            return;
+        }
+        
+        // Verificar que el tipo de usuario esté correctamente asignado
+        if (usuarioEncontrado.tipo() == null) {
+            mostrarAlerta("Error", "Error: El usuario no tiene un tipo asignado.");
             return;
         }
 
         // Navegación según tipo de usuario
         try {
             Stage stage = (Stage) txtCorreo.getScene().getWindow();
+            double width = stage.getWidth();
+            double height = stage.getHeight();
             
             if (usuarioEncontrado.tipo() == tipoUsuario.ADMINISTRADOR) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                        "/co/edu/uniquindio/citycourier/citycourier/AdministradorView.fxml"));
+                java.net.URL url = getClass().getResource(
+                        "/co/edu/uniquindio/citycourier/citycourier/AdministradorView.fxml");
+                if (url == null) {
+                    mostrarAlerta("Error", "No se encontró el archivo AdministradorView.fxml");
+                    return;
+                }
+                FXMLLoader loader = new FXMLLoader(url);
                 Parent root = loader.load();
-                stage.setScene(new Scene(root));
+                Scene scene = new Scene(root, width, height);
+                stage.setScene(scene);
+                stage.setTitle("Panel de Administración - CityCourier");
             } else {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                        "/co/edu/uniquindio/citycourier/citycourier/VistaUsuario.fxml"));
+                java.net.URL url = getClass().getResource(
+                        "/co/edu/uniquindio/citycourier/citycourier/VistaUsuario.fxml");
+                if (url == null) {
+                    mostrarAlerta("Error", "No se encontró el archivo VistaUsuario.fxml");
+                    return;
+                }
+                FXMLLoader loader = new FXMLLoader(url);
                 Parent root = loader.load();
-                stage.setScene(new Scene(root));
+                Scene scene = new Scene(root, width, height);
+                stage.setScene(scene);
             }
         } catch (IOException e) {
             mostrarAlerta("Error", "No se pudo cargar la vista: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
     }

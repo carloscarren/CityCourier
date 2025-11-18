@@ -7,6 +7,7 @@ import co.edu.uniquindio.citycourier.citycourier.mapping.mappers.EnvioMapper;
 import co.edu.uniquindio.citycourier.citycourier.mapping.mappers.RepartidorMapper;
 import co.edu.uniquindio.citycourier.citycourier.mapping.mappers.UsuarioMapper;
 import co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoEnvio;
+import co.edu.uniquindio.citycourier.citycourier.model.Usuario;
 import co.edu.uniquindio.citycourier.citycourier.utils.DataUtil;
 
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ public class ModelCityCourier {
     private final List<EnvioDto> envios = new ArrayList<>();
     private final List<RepartidorDto> repartidores = new ArrayList<>();
     private final List<UsuarioDto> usuarios = new ArrayList<>();
+    // Lista de usuarios del modelo para autenticación (mantiene las contraseñas)
+    private final List<Usuario> usuariosModelo = new ArrayList<>();
 
     private ModelCityCourier() {
         inicializarDatos();
@@ -28,6 +31,7 @@ public class ModelCityCourier {
     private void inicializarDatos() {
         // Inicializar usuarios desde DataUtil y convertir a DTOs
         var usuariosModelo = DataUtil.crearUsuarios();
+        this.usuariosModelo.addAll(usuariosModelo);
         usuarios.addAll(UsuarioMapper.getUsuariosDto(usuariosModelo));
 
         // Inicializar repartidores desde DataUtil y convertir a DTOs
@@ -195,13 +199,25 @@ public class ModelCityCourier {
             return null;
         }
         
-        for (UsuarioDto usuario : usuarios) {
-            if (usuario.correo().equalsIgnoreCase(correo)) {
-                // Convertir a modelo para acceder a la contraseña
-                var usuarioModelo = UsuarioMapper.usuarioDtoToUsuario(usuario);
-                if (usuarioModelo != null && usuarioModelo.getContrasena() != null 
-                    && usuarioModelo.getContrasena().equals(contrasena)) {
-                    return usuario;
+        // Normalizar el correo (trim y lowercase)
+        String correoNormalizado = correo.trim().toLowerCase();
+        
+        // Buscar en los usuarios del modelo que tienen las contraseñas
+        for (Usuario usuarioModelo : usuariosModelo) {
+            if (usuarioModelo != null && usuarioModelo.getCorreo() != null) {
+                String correoUsuario = usuarioModelo.getCorreo().trim().toLowerCase();
+                if (correoUsuario.equals(correoNormalizado)) {
+                    // Verificar contraseña
+                    if (usuarioModelo.getContrasena() != null && usuarioModelo.getContrasena().equals(contrasena)) {
+                        // Si las credenciales son correctas, buscar el DTO correspondiente
+                        String idUsuario = usuarioModelo.getIdUsuario();
+                        if (idUsuario != null) {
+                            return usuarios.stream()
+                                    .filter(u -> u.idUsuario() != null && u.idUsuario().equals(idUsuario))
+                                    .findFirst()
+                                    .orElse(null);
+                        }
+                    }
                 }
             }
         }
