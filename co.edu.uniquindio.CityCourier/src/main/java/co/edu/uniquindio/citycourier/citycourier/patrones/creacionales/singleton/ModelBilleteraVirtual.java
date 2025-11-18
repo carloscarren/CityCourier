@@ -9,7 +9,7 @@ public class ModelBilleteraVirtual {
 
     private static ModelBilleteraVirtual instancia;
 
-    // Simula tu base de datos en memoria
+    // Simula la base de datos en memoria
     private List<Usuario> listaUsuarios;
     private List<Cuenta> listaCuentas;
     private List<Transaccion> listaTransacciones;
@@ -164,27 +164,25 @@ public class ModelBilleteraVirtual {
 
     // Métodos de operaciones financieras (stubs)
     public boolean retirarCuenta(String idCuenta, Double monto, String descripcion, String idCategoria) {
-        // Implementar lógica
         return false;
     }
 
     public boolean retirarPresupuesto(String idCuenta, String idPresupuesto, Double monto, String descripcion, String idCategoria) {
-        // Implementar lógica
         return false;
     }
 
     public boolean depositoCuenta(String idCuenta, Double monto, String descripcion, String idCategoria) {
-        // Implementar lógica
+
         return false;
     }
 
     public boolean depositoPresupuesto(String idCuenta, String idPresupuesto, Double monto, String descripcion, String idCategoria) {
-        // Implementar lógica
+
         return false;
     }
 
     public boolean realizarTransferencia(String idCuentaOrigen, String idCuentaDestino, Double monto, String descripcion, String idCategoria) {
-        // Implementar lógica
+
         return false;
     }
 }
