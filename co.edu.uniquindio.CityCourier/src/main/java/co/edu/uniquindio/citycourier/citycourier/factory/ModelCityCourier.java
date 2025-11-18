@@ -183,9 +183,50 @@ public class ModelCityCourier {
                 .findFirst();
         if (opt.isPresent()) {
             usuarios.remove(opt.get());
+            // También eliminar de usuariosModelo
+            usuariosModelo.removeIf(u -> u.getIdUsuario().equals(idUsuario));
             return true;
         }
         return false;
+    }
+
+    /**
+     * Registra un nuevo usuario en el sistema.
+     * Guarda tanto en usuariosModelo (para autenticación) como en usuarios (DTOs).
+     * @param usuario Usuario con contraseña a registrar
+     * @return true si se registró correctamente, false si ya existe
+     */
+    public boolean registrarUsuario(Usuario usuario) {
+        if (usuario == null || usuario.getIdUsuario() == null) {
+            return false;
+        }
+
+        // Verificar que no exista ya el ID
+        boolean existeId = usuariosModelo.stream()
+                .anyMatch(u -> u.getIdUsuario() != null && u.getIdUsuario().equals(usuario.getIdUsuario()));
+        if (existeId) {
+            return false;
+        }
+
+        // Verificar que no exista ya el correo
+        String correoNormalizado = usuario.getCorreo() != null ? usuario.getCorreo().trim().toLowerCase() : null;
+        boolean existeCorreo = usuariosModelo.stream()
+                .anyMatch(u -> u.getCorreo() != null && 
+                        u.getCorreo().trim().toLowerCase().equals(correoNormalizado));
+        if (existeCorreo) {
+            return false;
+        }
+
+        // Agregar a usuariosModelo (con contraseña)
+        usuariosModelo.add(usuario);
+
+        // Convertir a DTO y agregar a usuarios
+        UsuarioDto usuarioDto = UsuarioMapper.usuarioToUsuarioDto(usuario);
+        if (usuarioDto != null) {
+            usuarios.add(usuarioDto);
+        }
+
+        return true;
     }
 
     /**
@@ -201,14 +242,17 @@ public class ModelCityCourier {
         
         // Normalizar el correo (trim y lowercase)
         String correoNormalizado = correo.trim().toLowerCase();
+        // Normalizar la contraseña (solo trim, sin cambiar mayúsculas/minúsculas)
+        String contrasenaNormalizada = contrasena.trim();
         
         // Buscar en los usuarios del modelo que tienen las contraseñas
         for (Usuario usuarioModelo : usuariosModelo) {
             if (usuarioModelo != null && usuarioModelo.getCorreo() != null) {
                 String correoUsuario = usuarioModelo.getCorreo().trim().toLowerCase();
                 if (correoUsuario.equals(correoNormalizado)) {
-                    // Verificar contraseña
-                    if (usuarioModelo.getContrasena() != null && usuarioModelo.getContrasena().equals(contrasena)) {
+                    // Verificar contraseña (comparación exacta después de trim)
+                    String contrasenaUsuario = usuarioModelo.getContrasena();
+                    if (contrasenaUsuario != null && contrasenaUsuario.trim().equals(contrasenaNormalizada)) {
                         // Si las credenciales son correctas, buscar el DTO correspondiente
                         String idUsuario = usuarioModelo.getIdUsuario();
                         if (idUsuario != null) {

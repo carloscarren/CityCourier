@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.usuario.ViewControllerRegistro"
+      prefHeight="700.0" prefWidth="1000.0">
+
+    <children>
+        <!-- PANEL IZQUIERDO -->
+        <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="500.0" HBox.hgrow="ALWAYS">
+            <children>
+                <!-- Título -->
+                <Label text="Registro"
+                       alignment="CENTER"
+                       textAlignment="CENTER"
+                       prefHeight="80.0"
+                       prefWidth="500.0"
+                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-padding: 20;" />
+
+                <!-- ScrollPane para permitir desplazamiento -->
+                <ScrollPane fitToWidth="true" prefHeight="550.0" prefWidth="500.0" style="-fx-background: white;">
+                    <content>
+                        <!-- Contenedor principal con scroll -->
+                        <VBox spacing="12" prefWidth="450.0" style="-fx-padding: 20;">
+                            <children>
+                                <!-- ID Usuario -->
+                                <Label text="ID Usuario" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                <TextField fx:id="txtIdUsuario" promptText="Ej: U003" prefWidth="450.0" style="-fx-font-size: 14px;"/>
+
+                                <!-- Nombre -->
+                                <Label text="Nombre" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                <TextField fx:id="txtNombre" promptText="Ingresa tu nombre" prefWidth="450.0" style="-fx-font-size: 14px;"/>
+
+                                <!-- Apellido -->
+                                <Label text="Apellido" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                <TextField fx:id="txtApellido" promptText="Ingresa tu apellido" prefWidth="450.0" style="-fx-font-size: 14px;"/>
+
+                                <!-- Correo -->
+                                <Label text="Correo" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                <TextField fx:id="txtCorreo" promptText="Ingresa tu correo" prefWidth="450.0" style="-fx-font-size: 14px;"/>
+
+                                <!-- Teléfono -->
+                                <Label text="Teléfono" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                <TextField fx:id="txtTelefono" promptText="Ingresa tu teléfono" prefWidth="450.0" style="-fx-font-size: 14px;"/>
+
+                                <!-- Contraseña -->
+                                <Label text="Contraseña" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                <PasswordField fx:id="txtContrasena" promptText="Ingresa tu contraseña" prefWidth="450.0" style="-fx-font-size: 14px;"/>
+
+                                <!-- Confirmar Contraseña -->
+                                <Label text="Confirmar Contraseña" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                <PasswordField fx:id="txtConfirmarContrasena" promptText="Confirma tu contraseña" prefWidth="450.0" style="-fx-font-size: 14px;"/>
+
+                                <!-- Tipo de Usuario -->
+                                <Label text="Tipo de Usuario" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                <ComboBox fx:id="cmbTipoUsuario" prefWidth="450.0" style="-fx-font-size: 14px;"/>
+
+                                <!-- Botones -->
+                                <VBox spacing="15" alignment="CENTER" style="-fx-padding: 30 0 20 0;">
+                                    <children>
+                                        <Button fx:id="btnRegistrar"
+                                                text="Registrarse"
+                                                onAction="#onRegistrar"
+                                                prefWidth="200"
+                                                prefHeight="45"
+                                                style="-fx-font-size: 18px; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" />
+                                        <Button fx:id="btnRegresarLogin"
+                                                text="Regresar al Login"
+                                                onAction="#onCancelar"
+                                                prefWidth="200"
+                                                prefHeight="45"
+                                                style="-fx-font-size: 18px; -fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+
+        <!-- PANEL DERECHO (imagen/logo) -->
+        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: #11114D;" HBox.hgrow="ALWAYS">
+            <children>
+                <Label text="CityCourier" 
+                       style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Label text="Sistema de Gestión de Envíos" 
+                       style="-fx-font-size: 20px; -fx-text-fill: white;"/>
+            </children>
+        </VBox>
+    </children>
+</HBox>
+

@@ -11,14 +11,14 @@ public class ViewControllerAdmEnvios {
 
     @FXML private TableView<EnvioDto> tablaEnvios;
     @FXML private TableColumn<EnvioDto, String> colId;
-    @FXML private TableColumn<EnvioDto, String> colUsuario;
+    @FXML private TableColumn<EnvioDto, String> colEstado;
+    @FXML private TableColumn<EnvioDto, String> colRepartidor;
     @FXML private TableColumn<EnvioDto, String> colOrigen;
     @FXML private TableColumn<EnvioDto, String> colDestino;
-    @FXML private TableColumn<EnvioDto, String> colEstado;
     @FXML private TableColumn<EnvioDto, Number> colCosto;
 
     @FXML private TextField txtIdEnvio;
-    @FXML private TextField txtEstado;
+    @FXML private ComboBox<String> cmbEstado;
     @FXML private TextField txtIdRepartidor;
 
     private final ModelCityCourier model = ModelCityCourier.getInstance();
@@ -26,12 +26,21 @@ public class ViewControllerAdmEnvios {
 
     @FXML
     public void initialize() {
+        // Configurar estados disponibles
+        cmbEstado.setItems(FXCollections.observableArrayList(
+                "SOLICITANDO", "ASIGNADO", "EN_RUTA", "ENTREGADO", "CANCELADO"
+        ));
+
         colId.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(data.getValue().idEnvio())
         );
 
-        colUsuario.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().idUsuario())
+        colEstado.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(data.getValue().getEstado().name())
+        );
+
+        colRepartidor.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty("Sin asignar") // Por ahora, se puede mejorar después
         );
 
         colOrigen.setCellValueFactory(data ->
@@ -42,15 +51,20 @@ public class ViewControllerAdmEnvios {
                 new javafx.beans.property.SimpleStringProperty(data.getValue().direccionDestino())
         );
 
-        colEstado.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getEstado().name())
-        );
-
         colCosto.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleDoubleProperty(data.getValue().costo())
         );
 
         tablaEnvios.setItems(listaEnvios);
+        
+        // Listener para selección de tabla
+        tablaEnvios.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                txtIdEnvio.setText(newVal.idEnvio());
+                cmbEstado.setValue(newVal.getEstado().name());
+            }
+        });
+        
         cargarEnvios();
     }
 
@@ -64,10 +78,10 @@ public class ViewControllerAdmEnvios {
     @FXML
     private void onActualizarEstado() {
         String idEnvio = txtIdEnvio.getText();
-        String nuevoEstado = txtEstado.getText();
+        String nuevoEstado = cmbEstado.getValue();
 
-        if (idEnvio.isBlank() || nuevoEstado.isBlank()) {
-            mostrar("Debe ingresar el ID y el nuevo estado.");
+        if (idEnvio.isBlank() || nuevoEstado == null) {
+            mostrar("Debe seleccionar un envío de la tabla y elegir un estado.");
             return;
         }
 
@@ -78,6 +92,28 @@ public class ViewControllerAdmEnvios {
         } else {
             mostrar("No se pudo actualizar el estado (verifique el ID o el estado).");
         }
+    }
+
+    @FXML
+    private void onEliminarEnvio() {
+        EnvioDto seleccionado = tablaEnvios.getSelectionModel().getSelectedItem();
+        if (seleccionado == null) {
+            mostrar("Seleccione un envío de la tabla para eliminar.");
+            return;
+        }
+
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Confirmar eliminación");
+        confirmacion.setHeaderText("¿Está seguro de eliminar el envío?");
+        confirmacion.setContentText("ID: " + seleccionado.idEnvio());
+
+        confirmacion.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                // En un sistema real, esto se haría en el modelo
+                listaEnvios.remove(seleccionado);
+                mostrar("Envío eliminado correctamente.");
+            }
+        });
     }
 
     // =============================================================

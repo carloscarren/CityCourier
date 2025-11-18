@@ -7,25 +7,61 @@
             fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.administrador.ViewControllerAdmRepartidor">
 
     <children>
-        <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10">
+        <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
             <Label text="Gestión de Repartidores"
                    style="-fx-font-size: 18; -fx-font-weight: bold;"/>
 
             <HBox spacing="10">
-                <TextField fx:id="txtId" promptText="ID Repartidor"/>
-                <TextField fx:id="txtNombre" promptText="Nombre"/>
-                <TextField fx:id="txtTelefono" promptText="Teléfono"/>
-                <TextField fx:id="txtVehiculo" promptText="Vehículo asignado"/>
-                <Button text="Agregar" onAction="#onAgregarRepartidor"/>
-                <Button text="Eliminar" onAction="#onEliminarRepartidor"/>
+                <VBox spacing="5">
+                    <Label text="Id:"/>
+                    <TextField fx:id="txtId" promptText="ID Repartidor" prefWidth="150"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Nombre:"/>
+                    <TextField fx:id="txtNombre" promptText="Nombre" prefWidth="150"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Telefono:"/>
+                    <TextField fx:id="txtTelefono" promptText="Teléfono" prefWidth="150"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Correo:"/>
+                    <TextField fx:id="txtCorreo" promptText="Correo" prefWidth="200"/>
+                </VBox>
             </HBox>
 
-            <TableView fx:id="tablaRepartidores" prefHeight="400" prefWidth="700">
+            <HBox spacing="10">
+                <VBox spacing="5">
+                    <Label text="Estado de disponibilidad:"/>
+                    <ComboBox fx:id="cmbEstado" prefWidth="200"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Zona de cobertura:"/>
+                    <ComboBox fx:id="cmbZonaCobertura" prefWidth="200"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Vehículo:"/>
+                    <TextField fx:id="txtVehiculo" promptText="Vehículo asignado" prefWidth="150"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="10">
+                <Button text="Registrar" onAction="#onRegistrarRepartidor" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                <Button text="Actualizar" onAction="#onActualizarRepartidor" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                <Button text="Eliminar" onAction="#onEliminarRepartidor" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+            </HBox>
+
+            <Separator/>
+
+            <Label text="Repartidores Registrados:" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="tablaRepartidores" prefHeight="300" prefWidth="800">
                 <columns>
                     <TableColumn fx:id="colId" text="ID" prefWidth="100"/>
                     <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
                     <TableColumn fx:id="colTelefono" text="Teléfono" prefWidth="150"/>
+                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/>
                     <TableColumn fx:id="colVehiculo" text="Vehículo" prefWidth="150"/>
+                    <TableColumn fx:id="colZona" text="Zona" prefWidth="130"/>
                 </columns>
             </TableView>
         </VBox>

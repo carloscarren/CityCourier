@@ -16,15 +16,15 @@
                     <children>
                         <VBox spacing="10" prefWidth="300">
                             <Label text="Información Personal" style="-fx-font-weight: bold;"/>
-                            <Label text="Nombre: [Nombre del Usuario]"/>
-                            <Label text="Correo: [correo@mail.com]"/>
-                            <Label text="Teléfono: [3001234567]"/>
-                            <Label text="ID Usuario: [U001]"/>
+                            <Label fx:id="lblNombrePerfil" text="Nombre: [Nombre del Usuario]"/>
+                            <Label fx:id="lblCorreoPerfil" text="Correo: [correo@mail.com]"/>
+                            <Label fx:id="lblTelefonoPerfil" text="Teléfono: [3001234567]"/>
+                            <Label fx:id="lblIdUsuarioPerfil" text="ID Usuario: [U001]"/>
                         </VBox>
                         <VBox spacing="10" prefWidth="300">
                             <Label text="Direcciones Frecuentes" style="-fx-font-weight: bold;"/>
-                            <Label text="Dirección 1: Calle 1 # 2-3, Centro"/>
-                            <Label text="Dirección 2: Calle 5 # 10-20, Norte"/>
+                            <Label fx:id="lblDireccion1" text="Dirección 1: Calle 1 # 2-3, Centro"/>
+                            <Label fx:id="lblDireccion2" text="Dirección 2: Calle 5 # 10-20, Norte"/>
                         </VBox>
                     </children>
                 </HBox>
@@ -35,15 +35,15 @@
                 <HBox spacing="30">
                     <VBox spacing="5">
                         <Label text="Total de Envíos:"/>
-                        <Label text="0" style="-fx-font-size: 24; -fx-text-fill: #2196F3;"/>
+                        <Label fx:id="lblTotalEnvios" text="0" style="-fx-font-size: 24; -fx-text-fill: #2196F3;"/>
                     </VBox>
                     <VBox spacing="5">
                         <Label text="Envíos Pendientes:"/>
-                        <Label text="0" style="-fx-font-size: 24; -fx-text-fill: #FF9800;"/>
+                        <Label fx:id="lblEnviosPendientes" text="0" style="-fx-font-size: 24; -fx-text-fill: #FF9800;"/>
                     </VBox>
                     <VBox spacing="5">
                         <Label text="Envíos Completados:"/>
-                        <Label text="0" style="-fx-font-size: 24; -fx-text-fill: #4CAF50;"/>
+                        <Label fx:id="lblEnviosCompletados" text="0" style="-fx-font-size: 24; -fx-text-fill: #4CAF50;"/>
                     </VBox>
                 </HBox>
             </children>

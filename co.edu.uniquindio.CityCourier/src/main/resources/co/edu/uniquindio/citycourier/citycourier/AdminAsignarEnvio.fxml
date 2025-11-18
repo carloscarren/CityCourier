@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.administrador.ViewControllerAdmAsignarEnvio">
+
+    <children>
+        <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10">
+            <Label text="Asignar Envíos a Repartidores"
+                   style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+            <HBox spacing="10">
+                <VBox spacing="5">
+                    <Label text="Id:"/>
+                    <TextField fx:id="txtIdEnvio" promptText="ID Envío" prefWidth="150"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Seleccione la fecha de salida:"/>
+                    <HBox spacing="5">
+                        <DatePicker fx:id="datePickerFechaSalida" prefWidth="200"/>
+                    </HBox>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Ruta:"/>
+                    <ComboBox fx:id="cmbRuta" prefWidth="250"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="10">
+                <VBox spacing="5" prefWidth="350">
+                    <Label text="Informacion del repartidor" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="cmbRepartidor" prefWidth="300"/>
+                </VBox>
+                <VBox spacing="5" prefWidth="350">
+                    <Label text="Información del pedido" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="cmbPedido" prefWidth="300"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="10">
+                <Button text="Asignar" onAction="#onAsignarEnvio" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                <Button text="Crear Envío" onAction="#onCrearEnvio" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+            </HBox>
+
+            <Separator/>
+
+            <Label text="Asignaciones:" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="tablaAsignaciones" prefHeight="200" prefWidth="750">
+                <columns>
+                    <TableColumn fx:id="colRutaAsignacion" text="Ruta" prefWidth="200"/>
+                    <TableColumn fx:id="colIdPedidoAsignacion" text="Id Pedido" prefWidth="200"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </children>
+</AnchorPane>
+

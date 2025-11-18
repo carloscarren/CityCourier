@@ -12,21 +12,34 @@
                    style="-fx-font-size: 18; -fx-font-weight: bold;"/>
 
             <HBox spacing="10">
-                <TextField fx:id="txtIdEnvio" promptText="ID Envío"/>
-                <TextField fx:id="txtEstado" promptText="Nuevo Estado"/>
-                <TextField fx:id="txtIdRepartidor" promptText="ID Repartidor (para asignar)"/>
-                <Button text="Actualizar Estado" onAction="#onActualizarEstado"/>
-                <Button text="Asignar Repartidor" onAction="#onAsignarRepartidor"/>
-                <Button text="Cancelar Envío" onAction="#onCancelarEnvio"/>
+                <VBox spacing="5">
+                    <Label text="ID Envío:"/>
+                    <TextField fx:id="txtIdEnvio" promptText="ID Envío" prefWidth="150"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Estado:"/>
+                    <ComboBox fx:id="cmbEstado" prefWidth="200"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Repartidor:"/>
+                    <TextField fx:id="txtIdRepartidor" promptText="ID Repartidor" prefWidth="150"/>
+                </VBox>
             </HBox>
 
-            <TableView fx:id="tablaEnvios" prefHeight="450" prefWidth="750">
+            <HBox spacing="10">
+                <Button text="Actualizar Estado" onAction="#onActualizarEstado" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                <Button text="Asignar Repartidor" onAction="#onAsignarRepartidor" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                <Button text="Cancelar Envío" onAction="#onCancelarEnvio" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+                <Button text="Eliminar" onAction="#onEliminarEnvio" style="-fx-background-color: #FF5722; -fx-text-fill: white;"/>
+            </HBox>
+
+            <TableView fx:id="tablaEnvios" prefHeight="450" prefWidth="850">
                 <columns>
-                    <TableColumn fx:id="colId" text="ID" prefWidth="100"/>
-                    <TableColumn fx:id="colUsuario" text="Usuario" prefWidth="100"/>
-                    <TableColumn fx:id="colOrigen" text="Origen" prefWidth="120"/>
-                    <TableColumn fx:id="colDestino" text="Destino" prefWidth="120"/>
-                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+                    <TableColumn fx:id="colId" text="Id" prefWidth="100"/>
+                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/>
+                    <TableColumn fx:id="colRepartidor" text="Repartidor" prefWidth="120"/>
+                    <TableColumn fx:id="colOrigen" text="Origen" prefWidth="200"/>
+                    <TableColumn fx:id="colDestino" text="Destino" prefWidth="200"/>
                     <TableColumn fx:id="colCosto" text="Costo" prefWidth="100"/>
                 </columns>
             </TableView>

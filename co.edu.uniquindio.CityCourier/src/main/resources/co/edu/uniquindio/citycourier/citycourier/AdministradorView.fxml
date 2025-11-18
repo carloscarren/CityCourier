@@ -47,6 +47,33 @@
                         </AnchorPane>
                     </content>
                 </Tab>
+                <Tab text="Asignar Envío">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <fx:include source="AdminAsignarEnvio.fxml"/>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Rutas">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <fx:include source="AdminRutas.fxml"/>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Ciudades">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <fx:include source="AdminCiudades.fxml"/>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
                 <Tab text="Métricas">
                     <content>
                         <AnchorPane>

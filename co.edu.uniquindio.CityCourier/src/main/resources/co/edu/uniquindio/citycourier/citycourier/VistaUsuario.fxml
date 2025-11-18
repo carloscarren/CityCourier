@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <BorderPane prefHeight="750.0" prefWidth="900.0"
             xmlns="http://javafx.com/javafx/8"
@@ -11,7 +12,18 @@
     <top>
         <HBox spacing="20" alignment="CENTER_RIGHT" style="-fx-padding: 10;">
             <children>
-                <Label fx:id="lblBienvenida" text="Bienvenido - CityCourier" HBox.hgrow="ALWAYS"/>
+                <HBox spacing="10" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                    <Label text="Hola" style="-fx-font-weight: bold;">
+                        <font>
+                            <Font size="24.0" />
+                        </font>
+                    </Label>
+                    <Label fx:id="lblNombreUsuario" text="Usuario" style="-fx-font-weight: bold;">
+                        <font>
+                            <Font size="24.0" />
+                        </font>
+                    </Label>
+                </HBox>
                 <Button fx:id="btnCerrarSesion" text="Cerrar Sesión" onAction="#onCerrarSesion"/>
             </children>
         </HBox>
@@ -81,6 +93,65 @@
                                 <Button text="Actualizar Lista" onAction="#onListar" style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
                                 <Separator/>
                                 <TextArea fx:id="txtSalida" prefHeight="500" prefWidth="800" editable="false" wrapText="true"/>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+                
+                <Tab text="Rastrear Pedido">
+                    <content>
+                        <VBox spacing="20" style="-fx-padding: 30;" alignment="CENTER">
+                            <children>
+                                <Label text="Rastrear Envío" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                                <Label text="Ingrese el ID del envío que desea rastrear" style="-fx-font-size: 14;"/>
+                                
+                                <HBox spacing="10" alignment="CENTER">
+                                    <TextField fx:id="txtIdRastrear" promptText="ID del envío" prefWidth="300"/>
+                                    <Button text="Buscar" onAction="#onRastrearPedido" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-pref-width: 100;"/>
+                                </HBox>
+                                
+                                <Separator prefWidth="600"/>
+                                
+                                <VBox spacing="10" prefWidth="700" alignment="CENTER_LEFT" style="-fx-padding: 20; -fx-background-color: #f5f5f5; -fx-background-radius: 10;">
+                                    <Label text="Información del Envío" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                                    <TextArea fx:id="txtInfoRastreo" prefHeight="300" prefWidth="650" editable="false" wrapText="true" style="-fx-background-color: white;"/>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+                
+                <Tab text="Gestionar Dirección">
+                    <content>
+                        <VBox spacing="20" style="-fx-padding: 30;">
+                            <children>
+                                <Label text="Mis Direcciones" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                                
+                                <HBox spacing="10">
+                                    <VBox spacing="5" prefWidth="200">
+                                        <Label text="Calle:"/>
+                                        <TextField fx:id="txtCalle" promptText="Ej: Calle 1 # 2-3"/>
+                                    </VBox>
+                                    <VBox spacing="5" prefWidth="200">
+                                        <Label text="Ciudad:"/>
+                                        <TextField fx:id="txtCiudad" promptText="Ej: Armenia"/>
+                                    </VBox>
+                                    <VBox spacing="5" prefWidth="300">
+                                        <Label text="Referencia:"/>
+                                        <TextField fx:id="txtReferencia" promptText="Ej: Frente al parque"/>
+                                    </VBox>
+                                </HBox>
+                                
+                                <HBox spacing="10">
+                                    <Button text="Agregar Dirección" onAction="#onAgregarDireccion" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                                    <Button text="Eliminar Dirección" onAction="#onEliminarDireccion" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+                                    <Button text="Actualizar Lista" onAction="#onListarDirecciones" style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+                                </HBox>
+                                
+                                <Separator/>
+                                
+                                <Label text="Direcciones Guardadas:" style="-fx-font-weight: bold;"/>
+                                <ListView fx:id="listaDirecciones" prefHeight="400" prefWidth="800"/>
                             </children>
                         </VBox>
                     </content>

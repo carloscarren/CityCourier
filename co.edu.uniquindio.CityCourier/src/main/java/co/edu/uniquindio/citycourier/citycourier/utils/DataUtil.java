@@ -34,6 +34,9 @@ public class DataUtil {
         usuario1.agregarDireccionFrecuente(
                 new Direccion("D001", "Calle 1 # 2-3", "Quindío", "Centro - Frente al parque")
         );
+        usuario1.agregarDireccionFrecuente(
+                new Direccion("D003", "Calle 5 # 10-20", "Quindío", "Norte")
+        );
         usuario2.agregarDireccionFrecuente(
                 new Direccion("D002", "Calle 5 # 10-20", "Quindío", "Norte - Junto a la biblioteca")
         );
@@ -93,7 +96,7 @@ public class DataUtil {
                 15000,
                 metodoPago.TARJETA_CREDITO,
                 LocalDateTime.now().plusDays(1),
-                usuarios.get(0).getIdUsuario()
+                usuarios.get(0).getIdUsuario()  // Carlos (U001)
         );
 
         Envio envio2 = new Envio(
@@ -106,7 +109,7 @@ public class DataUtil {
                 25000,
                 metodoPago.EFECTIVO,
                 LocalDateTime.now().plusDays(2),
-                usuarios.get(1).getIdUsuario()
+                usuarios.get(0).getIdUsuario()  // Carlos (U001) - Cambiado para que ambos sean de Carlos
         );
 
         envios.add(envio1);

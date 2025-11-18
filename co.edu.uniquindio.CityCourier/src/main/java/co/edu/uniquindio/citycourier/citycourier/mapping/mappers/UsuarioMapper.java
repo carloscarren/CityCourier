@@ -63,9 +63,15 @@ public class UsuarioMapper {
                 : new ArrayList<>();
 
 
+        // Concatenar nombre y apellido para el DTO
+        String nombreCompleto = usuario.getNombre();
+        if (usuario.getApellido() != null && !usuario.getApellido().isBlank()) {
+            nombreCompleto = nombreCompleto + " " + usuario.getApellido();
+        }
+        
         return new UsuarioDto(
                 usuario.getIdUsuario(),
-                usuario.getNombre(),
+                nombreCompleto,
                 usuario.getCorreo(),
                 usuario.getTelefono(),
                 usuario.getTipo(),
@@ -111,30 +117,10 @@ public class UsuarioMapper {
 
         for (Direccion d : dirs) {
             if (d == null) {
-                result.add(null);
                 continue;
             }
-            String val = null;
-            try {
-                Method getter = Direccion.class.getMethod("getDireccion");
-                Object out = getter.invoke(d);
-                val = out != null ? out.toString() : null;
-            } catch (Exception ignored) {
-            }
-
-            if (val == null) {
-                try {
-                    Method getter2 = Direccion.class.getMethod("getDetalle");
-                    Object out = getter2.invoke(d);
-                    val = out != null ? out.toString() : null;
-                } catch (Exception ignored) {
-                }
-            }
-
-            if (val == null) {
-                val = d.toString();
-            }
-            result.add(val);
+            // Usar el método toString() de Direccion que ya formatea correctamente
+            result.add(d.toString());
         }
         return result;
     }

@@ -35,10 +35,12 @@ public class ViewControllerLogin {
         }
 
         // Buscar usuario por correo y validar contraseña
-        UsuarioDto usuarioEncontrado = model.autenticarUsuario(correo, contrasena);
+        UsuarioDto usuarioEncontrado = model.autenticarUsuario(correo.trim(), contrasena);
 
         if (usuarioEncontrado == null) {
-            mostrarAlerta("Error", "Correo o contraseña incorrectos. Verifique sus credenciales.");
+            mostrarAlerta("Error", "Correo o contraseña incorrectos.\n\nCredenciales de prueba:\n" +
+                    "Admin: admin@citycourier.com / admin123\n" +
+                    "Usuario: carlos@mail.com / 1234");
             return;
         }
         
@@ -75,6 +77,14 @@ public class ViewControllerLogin {
                 }
                 FXMLLoader loader = new FXMLLoader(url);
                 Parent root = loader.load();
+                
+                // Pasar el usuario al controlador
+                co.edu.uniquindio.citycourier.citycourier.viewController.usuario.UsuarioViewController controller = 
+                    loader.getController();
+                if (controller != null) {
+                    controller.inicializarUsuario(usuarioEncontrado);
+                }
+                
                 Scene scene = new Scene(root, width, height);
                 stage.setScene(scene);
             }
@@ -89,8 +99,29 @@ public class ViewControllerLogin {
 
     @FXML
     private void onRegistrar() {
-        // TODO: Implementar funcionalidad de registro
-        mostrarAlerta("Información", "Funcionalidad de registro próximamente disponible", Alert.AlertType.INFORMATION);
+        try {
+            Stage stage = (Stage) txtCorreo.getScene().getWindow();
+            double width = stage.getWidth();
+            double height = stage.getHeight();
+
+            java.net.URL url = getClass().getResource(
+                    "/co/edu/uniquindio/citycourier/citycourier/Registro.fxml");
+            if (url == null) {
+                mostrarAlerta("Error", "No se encontró el archivo Registro.fxml", Alert.AlertType.ERROR);
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+            Scene scene = new Scene(root, width, height);
+            stage.setScene(scene);
+            stage.setTitle("CityCourier - Registro");
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo cargar la vista de registro: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error inesperado: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {

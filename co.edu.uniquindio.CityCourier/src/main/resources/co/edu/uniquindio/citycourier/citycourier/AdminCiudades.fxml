@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.administrador.ViewControllerAdmCiudades">
+
+    <children>
+        <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10">
+            <Label text="Gestión de Ciudades"
+                   style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+            <HBox spacing="10">
+                <VBox spacing="5">
+                    <Label text="Id:"/>
+                    <TextField fx:id="txtIdCiudad" promptText="ID Ciudad" prefWidth="150"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Nombre:"/>
+                    <TextField fx:id="txtNombreCiudad" promptText="Nombre Ciudad" prefWidth="200"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Cantidad de habitantes:"/>
+                    <TextField fx:id="txtHabitantes" promptText="Habitantes" prefWidth="200"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="10">
+                <Button text="Registrar" onAction="#onRegistrarCiudad" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                <Button text="Actualizar" onAction="#onActualizarCiudad" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                <Button text="Eliminar" onAction="#onEliminarCiudad" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+            </HBox>
+
+            <TableView fx:id="tablaCiudades" prefHeight="450" prefWidth="750">
+                <columns>
+                    <TableColumn fx:id="colIdCiudad" text="Id" prefWidth="150"/>
+                    <TableColumn fx:id="colNombreCiudad" text="Nombre" prefWidth="200"/>
+                    <TableColumn fx:id="colDepartamento" text="Habitantes" prefWidth="200"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </children>
+</AnchorPane>
+
