@@ -11,46 +11,33 @@
             <Label text="Asignar Envíos a Repartidores"
                    style="-fx-font-size: 18; -fx-font-weight: bold;"/>
 
-            <HBox spacing="10">
-                <VBox spacing="5">
-                    <Label text="Id:"/>
-                    <TextField fx:id="txtIdEnvio" promptText="ID Envío" prefWidth="150"/>
+            <Label text="Seleccione un envío en estado SOLICITANDO y un repartidor disponible para realizar la asignación."
+                   style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <VBox spacing="5" prefWidth="400">
+                    <Label text="Envíos Disponibles (SOLICITANDO)" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="cmbPedido" prefWidth="400" promptText="Seleccione un envío"/>
                 </VBox>
-                <VBox spacing="5">
-                    <Label text="Seleccione la fecha de salida:"/>
-                    <HBox spacing="5">
-                        <DatePicker fx:id="datePickerFechaSalida" prefWidth="200"/>
-                    </HBox>
-                </VBox>
-                <VBox spacing="5">
-                    <Label text="Ruta:"/>
-                    <ComboBox fx:id="cmbRuta" prefWidth="250"/>
+                <VBox spacing="5" prefWidth="400">
+                    <Label text="Repartidores Disponibles" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="cmbRepartidor" prefWidth="400" promptText="Seleccione un repartidor"/>
                 </VBox>
             </HBox>
 
-            <HBox spacing="10">
-                <VBox spacing="5" prefWidth="350">
-                    <Label text="Informacion del repartidor" style="-fx-font-weight: bold;"/>
-                    <ComboBox fx:id="cmbRepartidor" prefWidth="300"/>
-                </VBox>
-                <VBox spacing="5" prefWidth="350">
-                    <Label text="Información del pedido" style="-fx-font-weight: bold;"/>
-                    <ComboBox fx:id="cmbPedido" prefWidth="300"/>
-                </VBox>
-            </HBox>
-
-            <HBox spacing="10">
-                <Button text="Asignar" onAction="#onAsignarEnvio" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-                <Button text="Crear Envío" onAction="#onCrearEnvio" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Asignar Envío" onAction="#onAsignarEnvio" 
+                        prefWidth="200" prefHeight="40"
+                        style="-fx-font-size: 16px; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
             </HBox>
 
             <Separator/>
 
-            <Label text="Asignaciones:" style="-fx-font-weight: bold;"/>
-            <TableView fx:id="tablaAsignaciones" prefHeight="200" prefWidth="750">
+            <Label text="Asignaciones Realizadas:" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="tablaAsignaciones" prefHeight="250" prefWidth="800">
                 <columns>
-                    <TableColumn fx:id="colRutaAsignacion" text="Ruta" prefWidth="200"/>
-                    <TableColumn fx:id="colIdPedidoAsignacion" text="Id Pedido" prefWidth="200"/>
+                    <TableColumn fx:id="colIdPedidoAsignacion" text="ID Envío" prefWidth="150"/>
+                    <TableColumn fx:id="colRutaAsignacion" text="Repartidor Asignado" prefWidth="400"/>
                 </columns>
             </TableView>
         </VBox>

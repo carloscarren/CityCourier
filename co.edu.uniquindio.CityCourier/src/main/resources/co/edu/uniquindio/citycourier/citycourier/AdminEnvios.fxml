@@ -20,15 +20,10 @@
                     <Label text="Estado:"/>
                     <ComboBox fx:id="cmbEstado" prefWidth="200"/>
                 </VBox>
-                <VBox spacing="5">
-                    <Label text="Repartidor:"/>
-                    <TextField fx:id="txtIdRepartidor" promptText="ID Repartidor" prefWidth="150"/>
-                </VBox>
             </HBox>
 
             <HBox spacing="10">
                 <Button text="Actualizar Estado" onAction="#onActualizarEstado" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
-                <Button text="Asignar Repartidor" onAction="#onAsignarRepartidor" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
                 <Button text="Cancelar Envío" onAction="#onCancelarEnvio" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
                 <Button text="Eliminar" onAction="#onEliminarEnvio" style="-fx-background-color: #FF5722; -fx-text-fill: white;"/>
             </HBox>

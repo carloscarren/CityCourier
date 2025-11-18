@@ -10,38 +10,31 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 public class ViewControllerAdmAsignarEnvio {
 
     @FXML private TableView<String> tablaAsignaciones;
     @FXML private TableColumn<String, String> colRutaAsignacion;
     @FXML private TableColumn<String, String> colIdPedidoAsignacion;
 
-    @FXML private TextField txtIdEnvio;
-    @FXML private DatePicker datePickerFechaSalida;
-    @FXML private ComboBox<String> cmbRuta;
     @FXML private ComboBox<RepartidorDto> cmbRepartidor;
     @FXML private ComboBox<EnvioDto> cmbPedido;
 
     private final ModelCityCourier model = ModelCityCourier.getInstance();
     private final ObservableList<String> listaAsignaciones = FXCollections.observableArrayList();
-    private final ObservableList<String> listaRutas = FXCollections.observableArrayList();
     private final ObservableList<RepartidorDto> listaRepartidores = FXCollections.observableArrayList();
     private final ObservableList<EnvioDto> listaPedidos = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         // Configurar tabla de asignaciones
-        colRutaAsignacion.setCellValueFactory(data -> {
+        colIdPedidoAsignacion.setCellValueFactory(data -> {
             String asignacion = data.getValue();
             if (asignacion != null && asignacion.contains(" | ")) {
                 return new javafx.beans.property.SimpleStringProperty(asignacion.split(" \\| ")[0]);
             }
             return new javafx.beans.property.SimpleStringProperty("");
         });
-        colIdPedidoAsignacion.setCellValueFactory(data -> {
+        colRutaAsignacion.setCellValueFactory(data -> {
             String asignacion = data.getValue();
             if (asignacion != null && asignacion.contains(" | ")) {
                 String[] partes = asignacion.split(" \\| ");
@@ -54,13 +47,8 @@ public class ViewControllerAdmAsignarEnvio {
 
         tablaAsignaciones.setItems(listaAsignaciones);
 
-        // Cargar rutas disponibles
-        listaRutas.addAll("Quimbaya -> Armenia", "Quimbaya -> Montenegro", 
-                         "Circasia -> Quimbaya", "Circasia -> Armenia", 
-                         "Quimbaya -> Tebaida");
-        cmbRuta.setItems(listaRutas);
-
-        // Cargar repartidores
+        // Cargar SOLO repartidores disponibles (ACTIVO)
+        // Nota: Por ahora cargamos todos, pero en un sistema real se filtrarían por estado ACTIVO
         listaRepartidores.setAll(model.listarRepartidores());
         cmbRepartidor.setItems(listaRepartidores);
         cmbRepartidor.setConverter(new StringConverter<RepartidorDto>() {
@@ -75,13 +63,9 @@ public class ViewControllerAdmAsignarEnvio {
             }
         });
 
-        // Cargar pedidos disponibles (envíos en estado SOLICITANDO)
-        var todosEnvios = model.listarEnvios();
-        listaPedidos.setAll(
-                todosEnvios.stream()
-                        .filter(e -> e.getEstado() == estadoEnvio.SOLICITANDO)
-                        .toList()
-        );
+        // Cargar SOLO pedidos disponibles (envíos en estado SOLICITANDO)
+        cargarEnviosDisponibles();
+
         cmbPedido.setItems(listaPedidos);
         cmbPedido.setConverter(new StringConverter<EnvioDto>() {
             @Override
@@ -94,70 +78,71 @@ public class ViewControllerAdmAsignarEnvio {
                 return null;
             }
         });
-
-        // Configurar fecha por defecto
-        datePickerFechaSalida.setValue(LocalDate.now());
     }
 
+    /**
+     * Carga solo los envíos en estado SOLICITANDO (disponibles para asignar)
+     */
+    private void cargarEnviosDisponibles() {
+        var todosEnvios = model.listarEnvios();
+        listaPedidos.setAll(
+                todosEnvios.stream()
+                        .filter(e -> e.getEstado() == estadoEnvio.SOLICITANDO)
+                        .toList()
+        );
+    }
+
+    // =============================================================
+    // ASIGNAR ENVÍO A REPARTIDOR
+    // Responsabilidad Única: ÚNICA pestaña que asigna envíos a repartidores
+    // =============================================================
     @FXML
     private void onAsignarEnvio() {
-        String ruta = cmbRuta.getValue();
         RepartidorDto repartidor = cmbRepartidor.getValue();
         EnvioDto pedido = cmbPedido.getValue();
-        LocalDate fechaSalida = datePickerFechaSalida.getValue();
 
-        if (ruta == null || repartidor == null || pedido == null || fechaSalida == null) {
-            mostrarMensaje("Por favor complete todos los campos.");
+        if (repartidor == null || pedido == null) {
+            mostrarMensaje("Por favor seleccione un repartidor y un envío.");
             return;
         }
 
-        // Asignar envío al repartidor
+        // Validar que el envío esté en estado SOLICITANDO
+        if (pedido.getEstado() != estadoEnvio.SOLICITANDO) {
+            mostrarMensaje("Solo se pueden asignar envíos en estado SOLICITANDO.\n" +
+                    "Estado actual del envío: " + pedido.getEstado());
+            return;
+        }
+
+        // Asignar envío al repartidor (esto cambia el estado a EN_RUTA)
         boolean asignado = model.asignarRepartidorEnvio(pedido.idEnvio(), repartidor.idRepartidor());
         if (asignado) {
             // Agregar a la tabla de asignaciones
-            String asignacion = ruta + " | " + pedido.idEnvio();
+            String asignacion = pedido.idEnvio() + " | " + repartidor.nombre() + " (" + repartidor.idRepartidor() + ")";
             listaAsignaciones.add(asignacion);
             
-            // Actualizar lista de pedidos disponibles
+            // Actualizar lista de pedidos disponibles (remover el asignado)
             listaPedidos.remove(pedido);
             
-            mostrarMensaje("Envío asignado correctamente al repartidor.");
+            mostrarMensaje("Envío asignado correctamente al repartidor.\n" +
+                    "Envío: " + pedido.idEnvio() + "\n" +
+                    "Repartidor: " + repartidor.nombre() + " (" + repartidor.idRepartidor() + ")\n" +
+                    "Estado actualizado: SOLICITANDO → EN_RUTA");
             limpiarCampos();
         } else {
-            mostrarMensaje("No se pudo asignar el envío (ID inválido o envío ya finalizado).");
+            mostrarMensaje("No se pudo asignar el envío.\n" +
+                    "Verifique que el envío esté en estado SOLICITANDO y que el repartidor exista.");
         }
     }
 
-    @FXML
-    private void onCrearEnvio() {
-        String ruta = cmbRuta.getValue();
-        RepartidorDto repartidor = cmbRepartidor.getValue();
-        EnvioDto pedido = cmbPedido.getValue();
-        LocalDate fechaSalida = datePickerFechaSalida.getValue();
-
-        if (ruta == null || repartidor == null || pedido == null || fechaSalida == null) {
-            mostrarMensaje("Por favor complete todos los campos para crear el envío.");
-            return;
-        }
-
-        // Crear asignación
-        String asignacion = ruta + " | " + pedido.idEnvio();
-        listaAsignaciones.add(asignacion);
-        
-        // Asignar envío al repartidor
-        model.asignarRepartidorEnvio(pedido.idEnvio(), repartidor.idRepartidor());
-        
-        // Actualizar lista de pedidos disponibles
-        listaPedidos.remove(pedido);
-        
-        mostrarMensaje("Envío creado y asignado correctamente.");
-        limpiarCampos();
+    /**
+     * Método para refrescar la lista de envíos disponibles
+     * Útil cuando se regresa a esta pestaña después de crear nuevos envíos
+     */
+    public void refrescarEnviosDisponibles() {
+        cargarEnviosDisponibles();
     }
 
     private void limpiarCampos() {
-        txtIdEnvio.clear();
-        datePickerFechaSalida.setValue(LocalDate.now());
-        cmbRuta.setValue(null);
         cmbRepartidor.setValue(null);
         cmbPedido.setValue(null);
     }
