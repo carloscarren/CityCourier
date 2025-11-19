@@ -119,9 +119,16 @@ public class ViewControllerAdmAsignarEnvio {
     
     /**
      * Recarga la lista de repartidores (útil cuando se crea uno nuevo)
+     * Solo muestra repartidores en estado ACTIVO (disponibles para asignar)
      */
     private void cargarRepartidores() {
-        listaRepartidores.setAll(model.listarRepartidores());
+        var todosRepartidores = model.listarRepartidores();
+        // Filtrar solo repartidores ACTIVOS
+        listaRepartidores.setAll(
+                todosRepartidores.stream()
+                        .filter(r -> r.estado() != null && r.estado() == co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoRepartidor.ACTIVO)
+                        .toList()
+        );
         cmbRepartidor.setItems(listaRepartidores);
         cmbRepartidor.setConverter(new StringConverter<RepartidorDto>() {
             @Override

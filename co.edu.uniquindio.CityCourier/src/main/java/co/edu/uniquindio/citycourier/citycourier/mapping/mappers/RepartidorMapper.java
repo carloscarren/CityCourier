@@ -16,7 +16,8 @@ public class RepartidorMapper {
                 repartidor.getNombre(),
                 repartidor.getTelefono(),
                 repartidor.getVehiculoAsignado(),
-                repartidor.getZonaCobertura()
+                repartidor.getZonaCobertura(),
+                repartidor.getEstado()
         );
     }
 

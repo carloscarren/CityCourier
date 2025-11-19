@@ -40,7 +40,12 @@ public class ViewControllerAdmRepartidor {
         colId.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().idRepartidor()));
         colNombre.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().nombre()));
         colTelefono.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().telefono()));
-        colEstado.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty("ACTIVO")); // Por defecto
+        colEstado.setCellValueFactory(data -> {
+            var estado = data.getValue().estado();
+            return new javafx.beans.property.SimpleStringProperty(
+                    estado != null ? estado.name() : "ACTIVO"
+            );
+        });
         colVehiculo.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().vehiculoAsignado()));
         colZona.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().zonaCobertura()));
 
@@ -66,7 +71,11 @@ public class ViewControllerAdmRepartidor {
         txtTelefono.setText(repartidor.telefono());
         txtVehiculo.setText(repartidor.vehiculoAsignado());
         cmbZonaCobertura.setValue(repartidor.zonaCobertura());
-        cmbEstado.setValue("ACTIVO"); // Por defecto
+        if (repartidor.estado() != null) {
+            cmbEstado.setValue(repartidor.estado().name());
+        } else {
+            cmbEstado.setValue("ACTIVO");
+        }
     }
 
     @FXML
@@ -78,12 +87,25 @@ public class ViewControllerAdmRepartidor {
                 return;
             }
 
+            // Obtener el estado seleccionado o usar ACTIVO por defecto
+            co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoRepartidor estado = 
+                    co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoRepartidor.ACTIVO;
+            if (cmbEstado.getValue() != null) {
+                try {
+                    estado = co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoRepartidor.valueOf(
+                            cmbEstado.getValue().toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    estado = co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoRepartidor.ACTIVO;
+                }
+            }
+            
             RepartidorDto nuevo = new RepartidorDto(
                     txtId.getText(),
                     txtNombre.getText(),
                     txtTelefono.getText(),
                     txtVehiculo.getText().isBlank() ? "Sin asignar" : txtVehiculo.getText(),
-                    cmbZonaCobertura.getValue()
+                    cmbZonaCobertura.getValue(),
+                    estado
             );
             boolean creado = model.crearRepartidor(nuevo);
             if (creado) {
@@ -125,12 +147,24 @@ public class ViewControllerAdmRepartidor {
         }
 
         // Crear DTO actualizado
+        // Obtener el estado seleccionado o mantener el estado existente
+        co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoRepartidor estado = repartidorExistente.estado();
+        if (cmbEstado.getValue() != null) {
+            try {
+                estado = co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoRepartidor.valueOf(
+                        cmbEstado.getValue().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Mantener el estado existente si hay error
+            }
+        }
+        
         RepartidorDto actualizado = new RepartidorDto(
                 id,
                 txtNombre.getText(),
                 txtTelefono.getText(),
                 txtVehiculo.getText().isBlank() ? "Sin asignar" : txtVehiculo.getText(),
-                cmbZonaCobertura.getValue()
+                cmbZonaCobertura.getValue(),
+                estado
         );
 
         // Actualizar en el modelo
