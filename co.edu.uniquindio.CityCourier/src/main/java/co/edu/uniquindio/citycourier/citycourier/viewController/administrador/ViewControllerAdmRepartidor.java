@@ -117,21 +117,30 @@ public class ViewControllerAdmRepartidor {
             return;
         }
 
+        // Validar campos
+        if (txtNombre.getText().isBlank() || txtTelefono.getText().isBlank() || 
+            cmbZonaCobertura.getValue() == null) {
+            mostrarMensaje("Por favor complete todos los campos obligatorios.");
+            return;
+        }
+
         // Crear DTO actualizado
         RepartidorDto actualizado = new RepartidorDto(
                 id,
                 txtNombre.getText(),
                 txtTelefono.getText(),
                 txtVehiculo.getText().isBlank() ? "Sin asignar" : txtVehiculo.getText(),
-                cmbZonaCobertura.getValue() != null ? cmbZonaCobertura.getValue() : repartidorExistente.zonaCobertura()
+                cmbZonaCobertura.getValue()
         );
 
-        // Actualizar en la lista (en un sistema real, esto se haría en el modelo)
-        int index = listaRepartidores.indexOf(repartidorExistente);
-        if (index >= 0) {
-            listaRepartidores.set(index, actualizado);
+        // Actualizar en el modelo
+        boolean actualizadoExitoso = model.actualizarRepartidor(actualizado);
+        if (actualizadoExitoso) {
+            cargarRepartidores(); // Recargar la lista para reflejar cambios
             mostrarMensaje("Repartidor actualizado correctamente.");
             limpiarCampos();
+        } else {
+            mostrarMensaje("No se pudo actualizar el repartidor.");
         }
     }
 

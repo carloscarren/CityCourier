@@ -23,6 +23,8 @@ public class ModelCityCourier {
     private final List<UsuarioDto> usuarios = new ArrayList<>();
     // Lista de usuarios del modelo para autenticación (mantiene las contraseñas)
     private final List<Usuario> usuariosModelo = new ArrayList<>();
+    // Lista de ciudades (formato: "ID | Nombre | Habitantes")
+    private final List<String> ciudades = new ArrayList<>();
 
     private ModelCityCourier() {
         inicializarDatos();
@@ -41,6 +43,15 @@ public class ModelCityCourier {
         // Inicializar envíos desde DataUtil y convertir a DTOs
         var enviosModelo = DataUtil.crearEnvios(usuariosModelo);
         envios.addAll(EnvioMapper.getEnviosDto(enviosModelo));
+        
+        // Inicializar ciudades por defecto
+        ciudades.add("634020 | Quimbaya | 32175");
+        ciudades.add("630001 | Armenia | 309474");
+        ciudades.add("631001 | Circasia | 29789");
+        ciudades.add("633020 | Tebaida | 35000");
+        ciudades.add("633001 | Montenegro | 38460");
+        ciudades.add("660001 | Pereira | 467185");
+        ciudades.add("170001 | Manizales | 434403");
     }
 
     public static synchronized ModelCityCourier getInstance() {
@@ -100,6 +111,21 @@ public class ModelCityCourier {
         }
         return false;
     }
+    
+    public boolean actualizarRepartidor(RepartidorDto repartidorActualizado) {
+        if (repartidorActualizado == null || repartidorActualizado.idRepartidor() == null) {
+            return false;
+        }
+        Optional<RepartidorDto> opt = repartidores.stream()
+                .filter(r -> r.idRepartidor().equals(repartidorActualizado.idRepartidor()))
+                .findFirst();
+        if (opt.isPresent()) {
+            int index = repartidores.indexOf(opt.get());
+            repartidores.set(index, repartidorActualizado);
+            return true;
+        }
+        return false;
+    }
 
     public boolean actualizarEstadoEnvio(String idEnvio, String estadoStr) {
         try {
@@ -119,7 +145,8 @@ public class ModelCityCourier {
                         e.costo(),
                         e.fechaEntrega(),
                         e.idUsuario(),
-                        nuevoEstado
+                        nuevoEstado,
+                        e.idRepartidor() // Preservar el repartidor asignado
                 );
                 envios.remove(e);
                 envios.add(envioActualizado);
@@ -149,7 +176,8 @@ public class ModelCityCourier {
                         e.costo(),
                         e.fechaEntrega(),
                         e.idUsuario(),
-                        estadoEnvio.EN_RUTA
+                        estadoEnvio.EN_RUTA,
+                        idRepartidor
                 );
                 envios.remove(e);
                 envios.add(envioActualizado);
@@ -157,6 +185,30 @@ public class ModelCityCourier {
             }
         }
         return false;
+    }
+    
+    /**
+     * Obtiene el repartidor asignado a un envío
+     * @param idEnvio ID del envío
+     * @return ID del repartidor asignado, o null si no tiene asignado
+     */
+    public String obtenerRepartidorAsignado(String idEnvio) {
+        return envios.stream()
+                .filter(e -> e.idEnvio().equals(idEnvio))
+                .map(e -> e.idRepartidor())
+                .findFirst()
+                .orElse(null);
+    }
+    
+    /**
+     * Obtiene todos los envíos asignados a un repartidor
+     * @param idRepartidor ID del repartidor
+     * @return Lista de envíos asignados
+     */
+    public List<EnvioDto> obtenerEnviosAsignados(String idRepartidor) {
+        return envios.stream()
+                .filter(e -> idRepartidor != null && idRepartidor.equals(e.idRepartidor()))
+                .toList();
     }
 
     // =============== USUARIOS =================
@@ -266,5 +318,81 @@ public class ModelCityCourier {
             }
         }
         return null;
+    }
+
+    /**
+     * Obtiene la lista de usuarios como entidades del modelo (no DTOs).
+     * Útil para reportes que requieren objetos Usuario completos.
+     * @return Lista inmutable de usuarios del modelo
+     */
+    public List<Usuario> obtenerUsuariosEntidad() {
+        return Collections.unmodifiableList(usuariosModelo);
+    }
+
+    /**
+     * Obtiene un usuario como entidad del modelo por su ID.
+     * @param idUsuario ID del usuario a buscar
+     * @return Usuario si existe, null en caso contrario
+     */
+    public Usuario obtenerUsuarioEntidad(String idUsuario) {
+        if (idUsuario == null) {
+            return null;
+        }
+        return usuariosModelo.stream()
+                .filter(u -> u.getIdUsuario() != null && u.getIdUsuario().equals(idUsuario))
+                .findFirst()
+                .orElse(null);
+    }
+    
+    // =============== CIUDADES =================
+    
+    /**
+     * Obtiene la lista de ciudades
+     * @return Lista inmutable de ciudades (formato: "ID | Nombre | Habitantes")
+     */
+    public List<String> listarCiudades() {
+        return Collections.unmodifiableList(ciudades);
+    }
+    
+    /**
+     * Obtiene solo los nombres de las ciudades (sin ID ni habitantes)
+     * @return Lista de nombres de ciudades
+     */
+    public List<String> obtenerNombresCiudades() {
+        return ciudades.stream()
+                .map(ciudad -> {
+                    if (ciudad != null && ciudad.contains(" | ")) {
+                        String[] partes = ciudad.split(" \\| ");
+                        if (partes.length > 1) {
+                            return partes[1].trim();
+                        }
+                    }
+                    return ciudad;
+                })
+                .filter(nombre -> nombre != null && !nombre.isBlank())
+                .distinct()
+                .toList();
+    }
+    
+    /**
+     * Agrega una nueva ciudad
+     * @param ciudad Ciudad en formato "ID | Nombre | Habitantes"
+     * @return true si se agregó correctamente, false si ya existe
+     */
+    public boolean agregarCiudad(String ciudad) {
+        if (ciudad == null || ciudad.isBlank()) {
+            return false;
+        }
+        // Verificar si ya existe una ciudad con el mismo ID
+        if (ciudad.contains(" | ")) {
+            String id = ciudad.split(" \\| ")[0].trim();
+            boolean existe = ciudades.stream()
+                    .anyMatch(c -> c != null && c.startsWith(id + " | "));
+            if (existe) {
+                return false;
+            }
+        }
+        ciudades.add(ciudad);
+        return true;
     }
 }

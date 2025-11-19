@@ -1,5 +1,6 @@
 package co.edu.uniquindio.citycourier.citycourier.viewController.administrador;
 
+import co.edu.uniquindio.citycourier.citycourier.factory.ModelCityCourier;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,15 +19,14 @@ public class ViewControllerAdmRutas {
     @FXML private ComboBox<String> cmbCiudadDestino;
     @FXML private TextField txtDistancia;
 
+    private final ModelCityCourier model = ModelCityCourier.getInstance();
     private final ObservableList<String> listaRutas = FXCollections.observableArrayList();
     private final ObservableList<String> ciudades = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        // Cargar ciudades disponibles
-        ciudades.addAll("Armenia", "Quimbaya", "Circasia", "Montenegro", "Tebaida", "Pereira", "Manizales");
-        cmbCiudadOrigen.setItems(ciudades);
-        cmbCiudadDestino.setItems(ciudades);
+        // Cargar ciudades disponibles desde el modelo
+        refrescarCiudades();
         
         // Cargar rutas iniciales
         listaRutas.add("0000 | Quimbaya -> Armenia | 22.2");
@@ -34,6 +34,9 @@ public class ViewControllerAdmRutas {
         listaRutas.add("0002 | Circasia -> Quimbaya | 26.8");
         listaRutas.add("0003 | Circasia -> Armenia | 12.8");
         listaRutas.add("0004 | Quimbaya -> Tebaida | 28.9");
+        
+        // Agregar listener para refrescar ciudades cuando se selecciona esta pestaña
+        // Esto se hace a través del listener en ViewControllerAdmnistrador
         // Configurar columnas para mostrar datos de forma simple
         colIdRuta.setCellValueFactory(data -> {
             String ruta = data.getValue();
@@ -56,18 +59,22 @@ public class ViewControllerAdmRutas {
             String ruta = data.getValue();
             if (ruta != null && ruta.contains(" -> ")) {
                 String parte = ruta.split(" -> ")[1];
-                if (parte.contains(" (")) {
-                    return new javafx.beans.property.SimpleStringProperty(parte.split(" \\(")[0]);
+                // Remover la distancia si está presente (formato: "Destino | Distancia")
+                if (parte.contains(" | ")) {
+                    return new javafx.beans.property.SimpleStringProperty(parte.split(" \\| ")[0].trim());
                 }
-                return new javafx.beans.property.SimpleStringProperty(parte);
+                return new javafx.beans.property.SimpleStringProperty(parte.trim());
             }
             return new javafx.beans.property.SimpleStringProperty("");
         });
         colDistancia.setCellValueFactory(data -> {
             String ruta = data.getValue();
-            if (ruta != null && ruta.contains(" (")) {
-                String distancia = ruta.split(" \\(")[1].replace(" km)", "");
-                return new javafx.beans.property.SimpleStringProperty(distancia);
+            if (ruta != null && ruta.contains(" | ")) {
+                String[] partes = ruta.split(" \\| ");
+                if (partes.length >= 3) {
+                    // La distancia está en la tercera parte
+                    return new javafx.beans.property.SimpleStringProperty(partes[2].trim());
+                }
             }
             return new javafx.beans.property.SimpleStringProperty("");
         });
@@ -160,15 +167,34 @@ public class ViewControllerAdmRutas {
 
         // Buscar y actualizar la ruta
         String rutaActualizada = id + " | " + origen + " -> " + destino + " | " + distancia;
+        boolean encontrada = false;
         for (int i = 0; i < listaRutas.size(); i++) {
-            if (listaRutas.get(i).startsWith(id + " | ")) {
+            String rutaActual = listaRutas.get(i);
+            if (rutaActual != null && rutaActual.startsWith(id + " | ")) {
                 listaRutas.set(i, rutaActualizada);
-                mostrarMensaje("Ruta actualizada correctamente.");
-                limpiarCampos();
-                return;
+                encontrada = true;
+                break;
             }
         }
-        mostrarMensaje("No se encontró la ruta con ID: " + id);
+        
+        if (encontrada) {
+            // Forzar actualización de la tabla
+            tablaRutas.refresh();
+            mostrarMensaje("Ruta actualizada correctamente.");
+            limpiarCampos();
+        } else {
+            mostrarMensaje("No se encontró la ruta con ID: " + id);
+        }
+    }
+    
+    /**
+     * Refresca la lista de ciudades desde el modelo
+     * Útil cuando se agrega una nueva ciudad
+     */
+    public void refrescarCiudades() {
+        ciudades.setAll(model.obtenerNombresCiudades());
+        cmbCiudadOrigen.setItems(ciudades);
+        cmbCiudadDestino.setItems(ciudades);
     }
 
     private void limpiarCampos() {

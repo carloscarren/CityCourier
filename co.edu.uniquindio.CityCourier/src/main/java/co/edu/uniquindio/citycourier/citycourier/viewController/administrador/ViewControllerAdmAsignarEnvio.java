@@ -46,26 +46,20 @@ public class ViewControllerAdmAsignarEnvio {
         });
 
         tablaAsignaciones.setItems(listaAsignaciones);
+        
+        // Cargar datos iniciales
+        cargarDatosIniciales();
+        
+        // Agregar listener para refrescar cuando el nodo se vuelve visible
+        if (cmbRepartidor != null && cmbRepartidor.getScene() != null) {
+            cmbRepartidor.getScene().getRoot().visibleProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal) {
+                    refrescarDatos();
+                }
+            });
+        }
 
-        // Cargar SOLO repartidores disponibles (ACTIVO)
-        // Nota: Por ahora cargamos todos, pero en un sistema real se filtrarían por estado ACTIVO
-        listaRepartidores.setAll(model.listarRepartidores());
-        cmbRepartidor.setItems(listaRepartidores);
-        cmbRepartidor.setConverter(new StringConverter<RepartidorDto>() {
-            @Override
-            public String toString(RepartidorDto repartidor) {
-                return repartidor != null ? repartidor.nombre() + " (" + repartidor.idRepartidor() + ")" : "";
-            }
-
-            @Override
-            public RepartidorDto fromString(String string) {
-                return null;
-            }
-        });
-
-        // Cargar SOLO pedidos disponibles (envíos en estado SOLICITANDO)
-        cargarEnviosDisponibles();
-
+        // Configurar ComboBox de pedidos
         cmbPedido.setItems(listaPedidos);
         cmbPedido.setConverter(new StringConverter<EnvioDto>() {
             @Override
@@ -90,6 +84,56 @@ public class ViewControllerAdmAsignarEnvio {
                         .filter(e -> e.getEstado() == estadoEnvio.SOLICITANDO)
                         .toList()
         );
+    }
+    
+    /**
+     * Carga las asignaciones existentes en la tabla
+     */
+    private void cargarAsignacionesExistentes() {
+        listaAsignaciones.clear();
+        var todosEnvios = model.listarEnvios();
+        var todosRepartidores = model.listarRepartidores();
+        
+        for (EnvioDto envio : todosEnvios) {
+            if (envio.idRepartidor() != null && !envio.idRepartidor().isBlank()) {
+                var repartidor = todosRepartidores.stream()
+                        .filter(r -> r.idRepartidor().equals(envio.idRepartidor()))
+                        .findFirst();
+                if (repartidor.isPresent()) {
+                    String asignacion = envio.idEnvio() + " | " + 
+                            repartidor.get().nombre() + " (" + repartidor.get().idRepartidor() + ")";
+                    listaAsignaciones.add(asignacion);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Carga todos los datos iniciales
+     */
+    private void cargarDatosIniciales() {
+        cargarAsignacionesExistentes();
+        cargarRepartidores();
+        cargarEnviosDisponibles();
+    }
+    
+    /**
+     * Recarga la lista de repartidores (útil cuando se crea uno nuevo)
+     */
+    private void cargarRepartidores() {
+        listaRepartidores.setAll(model.listarRepartidores());
+        cmbRepartidor.setItems(listaRepartidores);
+        cmbRepartidor.setConverter(new StringConverter<RepartidorDto>() {
+            @Override
+            public String toString(RepartidorDto repartidor) {
+                return repartidor != null ? repartidor.nombre() + " (" + repartidor.idRepartidor() + ")" : "";
+            }
+
+            @Override
+            public RepartidorDto fromString(String string) {
+                return null;
+            }
+        });
     }
 
     // =============================================================
@@ -116,12 +160,11 @@ public class ViewControllerAdmAsignarEnvio {
         // Asignar envío al repartidor (esto cambia el estado a EN_RUTA)
         boolean asignado = model.asignarRepartidorEnvio(pedido.idEnvio(), repartidor.idRepartidor());
         if (asignado) {
-            // Agregar a la tabla de asignaciones
-            String asignacion = pedido.idEnvio() + " | " + repartidor.nombre() + " (" + repartidor.idRepartidor() + ")";
-            listaAsignaciones.add(asignacion);
+            // Recargar asignaciones para incluir la nueva
+            cargarAsignacionesExistentes();
             
             // Actualizar lista de pedidos disponibles (remover el asignado)
-            listaPedidos.remove(pedido);
+            cargarEnviosDisponibles();
             
             mostrarMensaje("Envío asignado correctamente al repartidor.\n" +
                     "Envío: " + pedido.idEnvio() + "\n" +
@@ -140,6 +183,16 @@ public class ViewControllerAdmAsignarEnvio {
      */
     public void refrescarEnviosDisponibles() {
         cargarEnviosDisponibles();
+    }
+    
+    /**
+     * Método público para refrescar los datos cuando se cambia a esta pestaña
+     * Útil cuando se crea un nuevo repartidor
+     */
+    public void refrescarDatos() {
+        cargarRepartidores();
+        cargarEnviosDisponibles();
+        cargarAsignacionesExistentes();
     }
 
     private void limpiarCampos() {

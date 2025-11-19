@@ -1,4 +1,4 @@
-package co.edu.uniquindio.citycourier.citycourier.viewController.usuario;
+package co.edu.uniquindio.citycourier.citycourier.viewController.loggin;
 
 import co.edu.uniquindio.citycourier.citycourier.factory.ModelCityCourier;
 import co.edu.uniquindio.citycourier.citycourier.mapping.dto.UsuarioDto;

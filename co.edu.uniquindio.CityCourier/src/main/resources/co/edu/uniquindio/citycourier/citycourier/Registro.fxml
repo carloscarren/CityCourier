@@ -13,7 +13,7 @@
 
 <HBox xmlns="http://javafx.com/javafx/8"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.usuario.ViewControllerRegistro"
+      fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.loggin.ViewControllerRegistro"
       prefHeight="700.0" prefWidth="1000.0">
 
     <children>

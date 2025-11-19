@@ -1,5 +1,6 @@
 package co.edu.uniquindio.citycourier.citycourier.viewController.administrador;
 
+import co.edu.uniquindio.citycourier.citycourier.factory.ModelCityCourier;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ public class ViewControllerAdmCiudades {
     @FXML private TextField txtNombreCiudad;
     @FXML private TextField txtHabitantes;
 
+    private final ModelCityCourier model = ModelCityCourier.getInstance();
     private final ObservableList<String> listaCiudades = FXCollections.observableArrayList();
 
     @FXML
@@ -51,12 +53,8 @@ public class ViewControllerAdmCiudades {
 
         tablaCiudades.setItems(listaCiudades);
         
-        // Agregar ciudades iniciales con habitantes
-        listaCiudades.add("634020 | Quimbaya | 32175");
-        listaCiudades.add("630001 | Armenia | 309474");
-        listaCiudades.add("631001 | Circasia | 29789");
-        listaCiudades.add("633020 | Tebaida | 35000");
-        listaCiudades.add("633001 | Montenegro | 38460");
+        // Cargar ciudades desde el modelo
+        cargarCiudades();
         
         // Listener para selección de tabla
         tablaCiudades.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -64,6 +62,10 @@ public class ViewControllerAdmCiudades {
                 cargarDatosCiudad(newVal);
             }
         });
+    }
+    
+    private void cargarCiudades() {
+        listaCiudades.setAll(model.listarCiudades());
     }
 
     private void cargarDatosCiudad(String ciudad) {
@@ -90,16 +92,22 @@ public class ViewControllerAdmCiudades {
 
         // Verificar si ya existe una ciudad con ese ID
         boolean existe = listaCiudades.stream()
-                .anyMatch(c -> c.startsWith(id + " | "));
+                .anyMatch(c -> c != null && c.startsWith(id + " | "));
         if (existe) {
             mostrarMensaje("Ya existe una ciudad con ese ID.");
             return;
         }
 
         String ciudad = id + " | " + nombre + " | " + habitantes;
-        listaCiudades.add(ciudad);
-        limpiarCampos();
-        mostrarMensaje("Ciudad registrada correctamente.");
+        // Agregar al modelo
+        boolean agregada = model.agregarCiudad(ciudad);
+        if (agregada) {
+            cargarCiudades(); // Recargar desde el modelo
+            limpiarCampos();
+            mostrarMensaje("Ciudad registrada correctamente.");
+        } else {
+            mostrarMensaje("No se pudo agregar la ciudad (ya existe).");
+        }
     }
 
     @FXML

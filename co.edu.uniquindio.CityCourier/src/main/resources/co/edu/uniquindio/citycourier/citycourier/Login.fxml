@@ -14,7 +14,7 @@
 <!-- ✅ fx:controller colocado correctamente en el contenedor raíz -->
 <HBox xmlns="http://javafx.com/javafx/25"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.usuario.ViewControllerLogin"
+      fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.loggin.ViewControllerLogin"
       prefHeight="503.0" prefWidth="854.0">
 
     <children>

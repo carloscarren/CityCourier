@@ -39,9 +39,21 @@ public class ViewControllerAdmEnvios {
                 new javafx.beans.property.SimpleStringProperty(data.getValue().getEstado().name())
         );
 
-        colRepartidor.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty("Sin asignar") // Por ahora, se puede mejorar después
-        );
+        colRepartidor.setCellValueFactory(data -> {
+            String idRepartidor = data.getValue().idRepartidor();
+            if (idRepartidor != null && !idRepartidor.isBlank()) {
+                // Buscar el nombre del repartidor
+                var repartidor = model.listarRepartidores().stream()
+                        .filter(r -> r.idRepartidor().equals(idRepartidor))
+                        .findFirst();
+                if (repartidor.isPresent()) {
+                    return new javafx.beans.property.SimpleStringProperty(
+                            repartidor.get().nombre() + " (" + idRepartidor + ")");
+                }
+                return new javafx.beans.property.SimpleStringProperty(idRepartidor);
+            }
+            return new javafx.beans.property.SimpleStringProperty("Sin asignar");
+        });
 
         colOrigen.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(data.getValue().direccionOrigen())

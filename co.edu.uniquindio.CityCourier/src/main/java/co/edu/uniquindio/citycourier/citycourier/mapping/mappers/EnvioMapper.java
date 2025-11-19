@@ -21,7 +21,8 @@ public class EnvioMapper {
                 envio.getCosto(),
                 envio.getFechaEstimadaEntrega() != null ? envio.getFechaEstimadaEntrega().toString() : null,
                 envio.getIdUsuarioAsociado(),
-                envio.getEstado() // debe ser de tipo estadoEnvio
+                envio.getEstado(), // debe ser de tipo estadoEnvio
+                envio.getRepartidorAsignado()
         );
     }
 

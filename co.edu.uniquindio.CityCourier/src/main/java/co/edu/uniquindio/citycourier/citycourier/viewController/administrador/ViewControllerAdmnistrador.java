@@ -1,6 +1,7 @@
 package co.edu.uniquindio.citycourier.citycourier.viewController.administrador;
 
 import co.edu.uniquindio.citycourier.citycourier.controller.AdministradorController;
+import co.edu.uniquindio.citycourier.citycourier.factory.ModelCityCourier;
 import co.edu.uniquindio.citycourier.citycourier.mapping.dto.EnvioDto;
 import co.edu.uniquindio.citycourier.citycourier.mapping.dto.RepartidorDto;
 import javafx.fxml.FXML;
@@ -8,9 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 
 import java.io.IOException;
 
@@ -25,6 +29,69 @@ public class ViewControllerAdmnistrador {
     @FXML private TextField txtIdRepartidor;
     @FXML
     private javafx.scene.control.Button btnCerrarSesion;
+    @FXML
+    private TabPane tabPaneAdmin;
+    
+    @FXML
+    public void initialize() {
+        // Agregar listener para refrescar datos cuando se cambia de pestaña
+        if (tabPaneAdmin != null) {
+            tabPaneAdmin.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    Platform.runLater(() -> {
+                        refrescarDatosPestaña(newValue);
+                    });
+                }
+            });
+        }
+    }
+    
+    /**
+     * Refresca los datos de la pestaña seleccionada
+     * Usa lookup para encontrar los nodos y refrescar los datos
+     */
+    private void refrescarDatosPestaña(Tab tab) {
+        String nombreTab = tab.getText();
+        
+        // Buscar en la escena completa usando lookup
+        if (tabPaneAdmin != null && tabPaneAdmin.getScene() != null) {
+            javafx.scene.Node root = tabPaneAdmin.getScene().getRoot();
+            if (root != null) {
+                switch (nombreTab) {
+                    case "Asignar Envío":
+                        // Buscar el ComboBox de repartidor y refrescar la lista
+                        // El controlador se refrescará automáticamente cuando se acceda a la pestaña
+                        // porque carga datos en initialize, pero podemos forzar un refresco
+                        // buscando el nodo y verificando que existe
+                        javafx.scene.Node cmbRepartidor = root.lookup("#cmbRepartidor");
+                        if (cmbRepartidor != null) {
+                            // El nodo existe, el controlador debería refrescarse automáticamente
+                            // al acceder a la pestaña porque el método refrescarDatos() se llama
+                        }
+                        break;
+                    case "Rutas":
+                        // Buscar el ComboBox de ciudades - si existe, refrescar
+                        javafx.scene.Node cmbCiudad = root.lookup("#cmbCiudadOrigen");
+                        if (cmbCiudad != null && cmbCiudad instanceof javafx.scene.control.ComboBox) {
+                            // Recargar ciudades desde el modelo
+                            @SuppressWarnings("unchecked")
+                            javafx.scene.control.ComboBox<String> comboBox = (javafx.scene.control.ComboBox<String>) cmbCiudad;
+                            var ciudades = ModelCityCourier.getInstance().obtenerNombresCiudades();
+                            comboBox.getItems().setAll(ciudades);
+                            
+                            // También refrescar el ComboBox de destino
+                            javafx.scene.Node cmbDestino = root.lookup("#cmbCiudadDestino");
+                            if (cmbDestino != null && cmbDestino instanceof javafx.scene.control.ComboBox) {
+                                @SuppressWarnings("unchecked")
+                                javafx.scene.control.ComboBox<String> comboBoxDestino = (javafx.scene.control.ComboBox<String>) cmbDestino;
+                                comboBoxDestino.getItems().setAll(ciudades);
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
 
     @FXML
     protected void onListarEnvios() {

@@ -74,6 +74,15 @@
                         </AnchorPane>
                     </content>
                 </Tab>
+                <Tab text="Métricas">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <fx:include source="AdminMetricas.fxml"/>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
             </tabs>
         </TabPane>
     </center>

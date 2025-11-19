@@ -21,8 +21,10 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 public class UsuarioViewController {
@@ -58,6 +60,20 @@ public class UsuarioViewController {
     @FXML
     private ListView<String> listaDirecciones;
     
+    // Campos para crear envío
+    @FXML
+    private TextField txtCalleOrigen;
+    @FXML
+    private javafx.scene.control.ComboBox<String> cmbCiudadOrigen;
+    @FXML
+    private TextField txtReferenciaOrigen;
+    @FXML
+    private TextField txtCalleDestino;
+    @FXML
+    private javafx.scene.control.ComboBox<String> cmbCiudadDestino;
+    @FXML
+    private TextField txtReferenciaDestino;
+    
     // Campos del perfil (pueden estar en el FXML incluido, así que los buscaremos dinámicamente)
     private Label lblNombrePerfil;
     private Label lblCorreoPerfil;
@@ -68,6 +84,8 @@ public class UsuarioViewController {
     private Label lblTotalEnvios;
     private Label lblEnviosPendientes;
     private Label lblEnviosCompletados;
+    private javafx.scene.control.Button btnDescargarReporte;
+    private javafx.scene.control.ComboBox<String> cmbFormatoReporte;
     
     private final ObservableList<String> direcciones = FXCollections.observableArrayList();
 
@@ -76,6 +94,19 @@ public class UsuarioViewController {
         // Inicializar lista de direcciones
         if (listaDirecciones != null) {
             listaDirecciones.setItems(direcciones);
+        }
+        
+        // Cargar ciudades en los ComboBoxes de origen y destino
+        if (cmbCiudadOrigen != null && cmbCiudadDestino != null) {
+            var ciudades = model.obtenerNombresCiudades();
+            cmbCiudadOrigen.setItems(FXCollections.observableArrayList(ciudades));
+            cmbCiudadDestino.setItems(FXCollections.observableArrayList(ciudades));
+        }
+        
+        // Configurar ComboBox de formato de reporte
+        if (cmbFormatoReporte != null) {
+            cmbFormatoReporte.setItems(FXCollections.observableArrayList("PDF", "CSV"));
+            cmbFormatoReporte.setValue("PDF"); // Valor por defecto
         }
         
         // Agregar listener para actualizar estadísticas cuando se selecciona la pestaña de Perfil
@@ -94,6 +125,7 @@ public class UsuarioViewController {
                         lblTotalEnvios = null;
                         lblEnviosPendientes = null;
                         lblEnviosCompletados = null;
+                        btnDescargarReporte = null;
                         
                         // Buscar nodos y actualizar
                         buscarNodosPerfil();
@@ -125,6 +157,26 @@ public class UsuarioViewController {
                 lblTotalEnvios = (Label) escena.getRoot().lookup("#lblTotalEnvios");
                 lblEnviosPendientes = (Label) escena.getRoot().lookup("#lblEnviosPendientes");
                 lblEnviosCompletados = (Label) escena.getRoot().lookup("#lblEnviosCompletados");
+                
+                // Buscar y configurar el botón de reporte
+                Node btnNodo = escena.getRoot().lookup("#btnDescargarReporte");
+                if (btnNodo != null && btnNodo instanceof javafx.scene.control.Button) {
+                    btnDescargarReporte = (javafx.scene.control.Button) btnNodo;
+                    btnDescargarReporte.setOnAction(e -> onGenerarReporte());
+                }
+                
+                // Buscar el ComboBox de formato
+                Node cmbNodo = escena.getRoot().lookup("#cmbFormatoReporte");
+                if (cmbNodo != null && cmbNodo instanceof javafx.scene.control.ComboBox) {
+                    @SuppressWarnings("unchecked")
+                    javafx.scene.control.ComboBox<String> combo = (javafx.scene.control.ComboBox<String>) cmbNodo;
+                    cmbFormatoReporte = combo;
+                    // Asegurar que tenga las opciones y valor por defecto
+                    if (combo.getItems().isEmpty()) {
+                        combo.setItems(FXCollections.observableArrayList("PDF", "CSV"));
+                        combo.setValue("PDF");
+                    }
+                }
                 return;
             }
         }
@@ -134,9 +186,13 @@ public class UsuarioViewController {
             if ("Perfil".equals(tab.getText())) {
                 Node contenidoPerfil = tab.getContent();
                 if (contenidoPerfil != null) {
-                    buscarNodosRecursivo(contenidoPerfil);
+                        buscarNodosRecursivo(contenidoPerfil);
                     // Si encontramos todos los nodos, salir
                     if (lblTotalEnvios != null && lblEnviosPendientes != null && lblEnviosCompletados != null) {
+                        // Configurar el botón de reporte si se encontró
+                        if (btnDescargarReporte != null) {
+                            btnDescargarReporte.setOnAction(e -> onGenerarReporte());
+                        }
                         return;
                     }
                 }
@@ -179,6 +235,18 @@ public class UsuarioViewController {
                     break;
                 case "lblEnviosCompletados":
                     lblEnviosCompletados = (Label) nodo;
+                    break;
+                case "btnDescargarReporte":
+                    if (nodo instanceof javafx.scene.control.Button) {
+                        btnDescargarReporte = (javafx.scene.control.Button) nodo;
+                    }
+                    break;
+                case "cmbFormatoReporte":
+                    if (nodo instanceof javafx.scene.control.ComboBox) {
+                        @SuppressWarnings("unchecked")
+                        javafx.scene.control.ComboBox<String> combo = (javafx.scene.control.ComboBox<String>) nodo;
+                        cmbFormatoReporte = combo;
+                    }
                     break;
             }
         }
@@ -338,20 +406,48 @@ public class UsuarioViewController {
                 return;
             }
             
+            // Validar campos obligatorios
+            if (txtPeso.getText().isBlank() || txtVolumen.getText().isBlank() || 
+                txtDistancia.getText().isBlank() || txtDescripcion.getText().isBlank()) {
+                mostrarAlerta("Error", "Por favor complete todos los campos obligatorios.");
+                return;
+            }
+            
+            // Validar direcciones
+            if (txtCalleOrigen.getText().isBlank() || cmbCiudadOrigen.getValue() == null) {
+                mostrarAlerta("Error", "Por favor complete la dirección de origen (calle y ciudad).");
+                return;
+            }
+            
+            if (txtCalleDestino.getText().isBlank() || cmbCiudadDestino.getValue() == null) {
+                mostrarAlerta("Error", "Por favor complete la dirección de destino (calle y ciudad).");
+                return;
+            }
+            
             double peso = Double.parseDouble(txtPeso.getText());
             double volumen = Double.parseDouble(txtVolumen.getText());
             double distancia = Double.parseDouble(txtDistancia.getText());
             boolean prioridad = chkPrioridad.isSelected();
             String desc = txtDescripcion.getText();
 
-            Direccion origen = new Direccion("Calle 1 #2-3, Centro", "Armenia", "Frente al parque");
-            Direccion destino = new Direccion("Carrera 10 #20-30, Norte", "Armenia", "Edificio azul");
+            // Crear direcciones desde los campos ingresados por el usuario
+            Direccion origen = new Direccion(
+                txtCalleOrigen.getText(),
+                cmbCiudadOrigen.getValue(),
+                txtReferenciaOrigen.getText().isBlank() ? null : txtReferenciaOrigen.getText()
+            );
+            
+            Direccion destino = new Direccion(
+                txtCalleDestino.getText(),
+                cmbCiudadDestino.getValue(),
+                txtReferenciaDestino.getText().isBlank() ? null : txtReferenciaDestino.getText()
+            );
 
             EnvioDto creado = usuarioController.crearEnvio(usuarioActual.idUsuario(), origen, destino, desc, peso, volumen, distancia, prioridad);
-            println("Envío creado: id=" + creado.idEnvio() + ", costo=$" + (long) creado.costo());
+            
+            mostrarAlerta("Éxito", "Envío creado correctamente.\nID: " + creado.idEnvio() + "\nCosto: $" + (long) creado.costo());
             
             // Actualizar estadísticas después de crear el envío
-            // Siempre intentar buscar los nodos y actualizar las estadísticas
             Platform.runLater(() -> {
                 // Forzar búsqueda de nodos (resetear referencias primero)
                 lblTotalEnvios = null;
@@ -369,9 +465,18 @@ public class UsuarioViewController {
             txtVolumen.clear();
             txtDistancia.clear();
             txtDescripcion.clear();
+            txtCalleOrigen.clear();
+            txtReferenciaOrigen.clear();
+            txtCalleDestino.clear();
+            txtReferenciaDestino.clear();
+            cmbCiudadOrigen.setValue(null);
+            cmbCiudadDestino.setValue(null);
             chkPrioridad.setSelected(false);
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Error", "Por favor ingrese valores numéricos válidos para peso, volumen y distancia.");
         } catch (Exception e) {
-            println("Error al crear envío: " + e.getMessage());
+            mostrarAlerta("Error", "Error al crear envío: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -614,6 +719,118 @@ public class UsuarioViewController {
     protected void onRegresar() {
         // Regresar al login (similar a cerrar sesión)
         onCerrarSesion();
+    }
+
+    /**
+     * Genera un reporte de gastos del usuario actual en formato PDF.
+     * Permite al usuario seleccionar dónde guardar el archivo.
+     */
+    @FXML
+    protected void onGenerarReporte() {
+        if (usuarioActual == null) {
+            mostrarAlerta("Error", "No hay usuario autenticado.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        try {
+            // Obtener el usuario como entidad del modelo
+            co.edu.uniquindio.citycourier.citycourier.model.Usuario usuarioEntidad = 
+                model.obtenerUsuarioEntidad(usuarioActual.idUsuario());
+
+            if (usuarioEntidad == null) {
+                mostrarAlerta("Error", "No se pudo encontrar la información del usuario.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Obtener el formato seleccionado (PDF por defecto)
+            String formato = "PDF";
+            if (cmbFormatoReporte != null && cmbFormatoReporte.getValue() != null) {
+                formato = cmbFormatoReporte.getValue();
+            } else {
+                // Si el ComboBox no está disponible, intentar buscarlo dinámicamente
+                if (tabPane != null && tabPane.getScene() != null) {
+                    javafx.scene.Node nodoFormato = tabPane.getScene().getRoot().lookup("#cmbFormatoReporte");
+                    if (nodoFormato != null && nodoFormato instanceof javafx.scene.control.ComboBox) {
+                        @SuppressWarnings("unchecked")
+                        javafx.scene.control.ComboBox<String> combo = (javafx.scene.control.ComboBox<String>) nodoFormato;
+                        if (combo.getValue() != null) {
+                            formato = combo.getValue();
+                        }
+                    }
+                }
+            }
+            
+            // Abrir FileChooser para seleccionar dónde guardar el archivo
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Guardar Reporte de Gastos");
+            fileChooser.setInitialFileName("reporte_gastos_" + usuarioActual.idUsuario());
+            
+            // Configurar filtros según el formato seleccionado
+            if (formato.equalsIgnoreCase("CSV")) {
+                FileChooser.ExtensionFilter extFilterCSV = new FileChooser.ExtensionFilter(
+                    "Archivos CSV (*.csv)", "*.csv");
+                fileChooser.getExtensionFilters().add(extFilterCSV);
+            } else {
+                FileChooser.ExtensionFilter extFilterPDF = new FileChooser.ExtensionFilter(
+                    "Archivos PDF (*.pdf)", "*.pdf");
+                fileChooser.getExtensionFilters().add(extFilterPDF);
+            }
+
+            // Obtener el Stage desde cualquier componente disponible
+            Stage stage = null;
+            if (tabPane != null && tabPane.getScene() != null) {
+                stage = (Stage) tabPane.getScene().getWindow();
+            } else if (txtSalida != null && txtSalida.getScene() != null) {
+                stage = (Stage) txtSalida.getScene().getWindow();
+            }
+
+            if (stage == null) {
+                mostrarAlerta("Error", "No se pudo obtener la ventana actual.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            File archivoSeleccionado = fileChooser.showSaveDialog(stage);
+            
+            if (archivoSeleccionado == null) {
+                // Usuario canceló la operación
+                return;
+            }
+            
+            // Obtener la ruta del archivo (sin extensión, ya que el exportador la agrega)
+            String rutaArchivo = archivoSeleccionado.getAbsolutePath();
+            String extension = formato.equalsIgnoreCase("CSV") ? ".csv" : ".pdf";
+            if (rutaArchivo.endsWith(extension)) {
+                rutaArchivo = rutaArchivo.substring(0, rutaArchivo.length() - extension.length());
+            } else if (rutaArchivo.endsWith(".pdf") && formato.equalsIgnoreCase("CSV")) {
+                rutaArchivo = rutaArchivo.substring(0, rutaArchivo.length() - 4);
+            } else if (rutaArchivo.endsWith(".csv") && formato.equalsIgnoreCase("PDF")) {
+                rutaArchivo = rutaArchivo.substring(0, rutaArchivo.length() - 4);
+            }
+
+            // Instanciar ReporteService y el exportador según el formato seleccionado (Patrón Bridge)
+            co.edu.uniquindio.citycourier.citycourier.patrones.estructurales.bridge.ReporteService reporteService = 
+                new co.edu.uniquindio.citycourier.citycourier.patrones.estructurales.bridge.ReporteService();
+            
+            co.edu.uniquindio.citycourier.citycourier.patrones.estructurales.bridge.Exportador exportador;
+            if (formato.equalsIgnoreCase("CSV")) {
+                exportador = new co.edu.uniquindio.citycourier.citycourier.patrones.estructurales.bridge.ExportadorCSV();
+            } else {
+                exportador = new co.edu.uniquindio.citycourier.citycourier.patrones.estructurales.bridge.ExportadorPDF();
+            }
+
+            // Generar el reporte usando el patrón Bridge
+            reporteService.generarReporteGastosUsuario(usuarioEntidad, rutaArchivo, exportador);
+
+            mostrarAlerta("Éxito", 
+                "Reporte de gastos generado correctamente en:\n" + rutaArchivo + extension, 
+                Alert.AlertType.INFORMATION);
+
+        } catch (Exception e) {
+            mostrarAlerta("Error", 
+                "Error al generar el reporte: " + e.getMessage(), 
+                Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {

@@ -55,6 +55,46 @@
                                     </children>
                                 </HBox>
                                 
+                                <Separator/>
+                                
+                                <Label text="Dirección de Origen" style="-fx-font-weight: bold;"/>
+                                <HBox spacing="10">
+                                    <children>
+                                        <VBox spacing="5" prefWidth="250">
+                                            <Label text="Calle y Número:"/>
+                                            <TextField fx:id="txtCalleOrigen" promptText="Ej: Calle 1 #2-3" prefWidth="250"/>
+                                        </VBox>
+                                        <VBox spacing="5" prefWidth="200">
+                                            <Label text="Ciudad:"/>
+                                            <ComboBox fx:id="cmbCiudadOrigen" promptText="Seleccione ciudad" prefWidth="200"/>
+                                        </VBox>
+                                        <VBox spacing="5" prefWidth="250">
+                                            <Label text="Referencia:"/>
+                                            <TextField fx:id="txtReferenciaOrigen" promptText="Ej: Frente al parque" prefWidth="250"/>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                                
+                                <Label text="Dirección de Destino" style="-fx-font-weight: bold;"/>
+                                <HBox spacing="10">
+                                    <children>
+                                        <VBox spacing="5" prefWidth="250">
+                                            <Label text="Calle y Número:"/>
+                                            <TextField fx:id="txtCalleDestino" promptText="Ej: Carrera 10 #20-30" prefWidth="250"/>
+                                        </VBox>
+                                        <VBox spacing="5" prefWidth="200">
+                                            <Label text="Ciudad:"/>
+                                            <ComboBox fx:id="cmbCiudadDestino" promptText="Seleccione ciudad" prefWidth="200"/>
+                                        </VBox>
+                                        <VBox spacing="5" prefWidth="250">
+                                            <Label text="Referencia:"/>
+                                            <TextField fx:id="txtReferenciaDestino" promptText="Ej: Edificio azul" prefWidth="250"/>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                                
+                                <Separator/>
+                                
                                 <HBox spacing="10">
                                     <children>
                                         <VBox spacing="5">

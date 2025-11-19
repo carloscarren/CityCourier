@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.citycourier.citycourier.viewController.administrador.ViewControllerMetricas"
+            prefHeight="600.0" prefWidth="900.0">
+    <children>
+        <VBox spacing="20" style="-fx-padding: 20;" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+            <children>
+                <Label text="Exportación de Reportes" 
+                       style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                <Separator/>
+                
+                <Label text="Seleccione el tipo de reporte que desea exportar:" 
+                       style="-fx-font-size: 14;"/>
+                
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Button fx:id="btnExportarUsuariosActivos" 
+                            text="Exportar Usuarios Activos" 
+                            onAction="#onExportarUsuariosActivos"
+                            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 25;"/>
+                    
+                    <Button fx:id="btnExportarSaldoPromedio" 
+                            text="Exportar Saldo Promedio" 
+                            onAction="#onExportarSaldoPromedio"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 25;"/>
+                </HBox>
+                
+                <Separator/>
+                
+                <Label text="Los reportes se generarán en formato PDF. Seleccione la ubicación donde desea guardar el archivo." 
+                       style="-fx-font-size: 12; -fx-text-fill: #666;"/>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
+
