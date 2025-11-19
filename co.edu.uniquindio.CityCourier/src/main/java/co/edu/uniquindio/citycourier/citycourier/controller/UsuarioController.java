@@ -5,7 +5,6 @@ import co.edu.uniquindio.citycourier.citycourier.factory.ModelFinanciero;
 import co.edu.uniquindio.citycourier.citycourier.mapping.dto.EnvioDto;
 import co.edu.uniquindio.citycourier.citycourier.model.Direccion;
 import co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoEnvio;
-import co.edu.uniquindio.citycourier.citycourier.model.ENUMS.estadoPago;
 import co.edu.uniquindio.citycourier.citycourier.model.Pago;
 
 import java.time.LocalDateTime;
@@ -26,8 +25,8 @@ public class UsuarioController {
      * También registra el pago asociado al envío en ModelFinanciero (RF-033).
      */
     public EnvioDto crearEnvio(String idUsuario, Direccion origen, Direccion destino,
-                               String descripcion, double peso, double volumen,
-                               double distancia, boolean prioridad) {
+                                   String descripcion, double peso, double volumen,
+                                   double distancia, boolean prioridad) {
 
         // Cálculo de tarifa simulada
         double costo = cotizar(peso, volumen, distancia, prioridad);
@@ -51,20 +50,20 @@ public class UsuarioController {
 
         // Registrar el envío en el sistema de logística
         factory.crearEnvio(envio);
-        
+
         // ============================================================
         // INTEGRACIÓN CON MÓDULO FINANCIERO (RF-033)
         // Registrar el pago asociado al envío en ModelFinanciero
         // ============================================================
         try {
             ModelFinanciero modelFinanciero = ModelFinanciero.getInstancia();
-            
+
             // Generar ID único para el pago
             String idPago = "PAGO_" + System.currentTimeMillis();
-            
+
             // Generar número de transacción
             String numeroTransaccion = "TXN_" + System.currentTimeMillis();
-            
+
             // Crear el objeto Pago asociado al envío
             Pago pago = new Pago(
                     idPago,
@@ -73,13 +72,13 @@ public class UsuarioController {
                     "Tarjeta de credito",  // Método de pago por defecto (se puede parametrizar después)
                     numeroTransaccion
             );
-            
+
             // Procesar el pago (valida y establece el estado)
             pago.procesarPago();
-            
+
             // Registrar el pago en el modelo financiero
             boolean pagoRegistrado = modelFinanciero.registrarPago(pago);
-            
+
             if (!pagoRegistrado) {
                 System.err.println("Advertencia: No se pudo registrar el pago " + idPago + " para el envío " + idEnvio);
             }
@@ -89,7 +88,7 @@ public class UsuarioController {
             System.err.println("Error al registrar pago para el envío " + idEnvio + ": " + e.getMessage());
             e.printStackTrace();
         }
-        
+
         return envio;
     }
 
@@ -113,7 +112,7 @@ public class UsuarioController {
      */
     public double cotizar(double peso, double volumen, double distancia, boolean prioridad) {
         // Crear una tarifa estándar para el cálculo
-        co.edu.uniquindio.citycourier.citycourier.model.Tarifa tarifa = 
+        co.edu.uniquindio.citycourier.citycourier.model.Tarifa tarifa =
             new co.edu.uniquindio.citycourier.citycourier.model.Tarifa(
                 "TARIFA_STD",
                 5000,  // costoBase

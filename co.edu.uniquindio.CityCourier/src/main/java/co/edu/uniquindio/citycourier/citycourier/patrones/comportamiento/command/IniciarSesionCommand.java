@@ -1,6 +1,5 @@
 package co.edu.uniquindio.citycourier.citycourier.patrones.comportamiento.command;
 
-import co.edu.uniquindio.citycourier.citycourier.controller.UsuarioController;
 import co.edu.uniquindio.citycourier.citycourier.mapping.dto.UsuarioDto;
 import co.edu.uniquindio.citycourier.citycourier.model.ENUMS.tipoUsuario;
 import co.edu.uniquindio.citycourier.citycourier.viewController.administrador.ViewControllerAdmnistrador;
